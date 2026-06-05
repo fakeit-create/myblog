@@ -1,6 +1,6 @@
 ---
 # 基本信息
-title: {雷德王还有3小时降临地球}
+title: 雷德王还有3小时降临地球
 date: {{ date }}
 tags: []
 categories: []
