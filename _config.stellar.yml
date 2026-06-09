@@ -25,14 +25,14 @@ open_graph:
   twitter_id: # for open_graph meta
 
 structured_data:
-  links: [] # your social links.
+  links: [https://github.com/fakeit-create] # your social links.
 
 
 ######## Sidebar ########
 # 左上角显示的 logo 区域，包含图标、大标题、副标题
 logo:
-  avatar: '[{config.avatar}](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
-  title: '[{config.title}](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
+  avatar: '[https://204714.xyz/file/1780995706299_SF_Background.jpg](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
+  title: '[Blog of feng](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
   subtitle: '{config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
 
 # 侧边栏主功能导航菜单
@@ -44,11 +44,11 @@ menubar:
     # icon: 支持 svg/img 标签，可以定义在 icons.yml 文件中，也支持外部图片的 URL
     # title: 标题
     # url: 点击跳转到哪，支持相对路径和绝对路径
-    # - id: post
-    #   theme: '#1BCDFC'
-    #   icon: solar:documents-bold-duotone
-    #   title: 博客
-    #   url: /
+    - id: post
+      theme: '#1BCDFC'
+      icon: solar:documents-bold-duotone
+      title: 博客
+      url: /
     # - id: wiki
     #   theme: '#3DC550'
     #   icon: solar:notebook-bookmark-bold-duotone
@@ -217,7 +217,7 @@ search:
 
 ######## Comments ########
 comments:
-  service: # beaudar, utterances, giscus, twikoo, waline, artalk
+  service: giscus # beaudar, utterances, giscus, twikoo, waline, artalk
   comment_title: 快来参与讨论吧~
   lazyload: false # true / false
   custom_css: # artalk,twikoo,... 可以为没有全局启用的评论加载自定义样式
