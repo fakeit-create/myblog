@@ -12,7 +12,7 @@ comments: false
 <meting-js
   server="tencent"
   type="playlist"
-  id="请替换成你的QQ音乐歌单ID"
+  id="2076419485"
   fixed="false"
   mini="false"
   autoplay="false"

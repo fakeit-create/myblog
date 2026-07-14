@@ -1,0 +1,27 @@
+# Wiki 项目标识为 docs，文章中的 wiki 字段必须与它一致
+name: 我的文档
+title: 我的文档
+subtitle: 博客使用与学习笔记
+tags:
+  - Hexo
+  - Stellar
+  - 技术文档
+icon: solar:notebook-bookmark-bold-duotone
+# cover: /assets/wiki/docs-cover.webp
+
+description: 用于整理博客搭建、Stellar 主题配置和日常学习笔记。
+
+# 如果有公开仓库，可以取消注释并填写“用户名/仓库名”
+# repo: username/repository
+
+search:
+  filter: /wiki/docs/
+  placeholder: 在我的文档中搜索
+
+leftbar:
+  - tree
+  - related
+  - recent
+
+rightbar:
+  - toc

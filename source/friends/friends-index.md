@@ -7,10 +7,9 @@ comments: true
 
 你可以通过以下方式找到我：
 
-- GitHub：[填写你的 GitHub 地址](https://github.com/)
-- QQ：填写你的 QQ 号
-- 邮箱：填写你的邮箱
-- 哔哩哔哩：[填写你的个人主页](https://space.bilibili.com/)
+- GitHub：[https://github.com/fakeit-create](https://github.com/)
+- QQ：2732282759
+- 邮箱：2732282759@qq.com
 
 ## 友情链接
 

@@ -49,7 +49,7 @@ menubar:
       theme: '#3DC550'
       icon: solar:notebook-bookmark-bold-duotone
       title: 文档
-      url: /wiki/
+      url: /wiki/docs/
 
     - id: explore
       theme: '#FA6400'
