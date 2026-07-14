@@ -1,5 +1,7 @@
 ---
 title: 探索
+layout: page
+permalink: /explore/
 comments: false
 ---
 
@@ -9,8 +11,8 @@ comments: false
 
 - [GitHub](https://github.com/)：代码托管与开源项目
 - [Iconify](https://icon-sets.iconify.design/)：开源图标库
-- [Can I Use](https://caniuse.com/)：浏览器兼容性查询
 - [MDN Web Docs](https://developer.mozilla.org/zh-CN/)：Web 开发文档
+- [Can I Use](https://caniuse.com/)：浏览器兼容性查询
 
 ## 学习资源
 
@@ -18,10 +20,4 @@ comments: false
 - [哔哩哔哩](https://www.bilibili.com/)
 - [中国大学 MOOC](https://www.icourse163.org/)
 
-## 有趣的网站
-
-- [Internet Archive](https://archive.org/)
-- [Google Arts & Culture](https://artsandculture.google.com/)
-- [Explore.org](https://explore.org/)
-
-> 这个页面将持续更新。
+> 此页面会持续更新。

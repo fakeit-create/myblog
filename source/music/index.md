@@ -1,9 +1,11 @@
 ---
-title: 我的音乐
+title: QQ 音乐
+layout: page
+permalink: /music/
 comments: false
 ---
 
-这里是我的音乐收藏，戴上耳机一起听吧。
+这里是我的 QQ 音乐收藏。
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css">
 <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script>
