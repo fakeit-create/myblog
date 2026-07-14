@@ -65,7 +65,7 @@ menubar:
 
     - id: music
       theme: '#31C27C'
-      icon: solar:music-notes-bold-duotone
+      icon: solar:headphones-round-bold-duotone
       title: QQ音乐
       url: /music/
 
