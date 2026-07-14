@@ -37,7 +37,7 @@ logo:
 
 # 侧边栏主功能导航菜单
 menubar:
-  columns: 5
+  columns: 5 # 每行最多显示 4 个
   items:
     - id: post
       theme: '#1BCDFC'
@@ -49,23 +49,23 @@ menubar:
       theme: '#3DC550'
       icon: solar:notebook-bookmark-bold-duotone
       title: 文档
-      url: /wiki/
+      url: /wiki/docs/
 
     - id: explore
       theme: '#FA6400'
-      icon: solar:planet-3-bold-duotone
+      icon: solar:planet-bold-duotone
       title: 探索
       url: /explore/
 
-    - id: friends
-      theme: '#F4437C'
-      icon: solar:heart-bold-duotone
+    - id: social
+      theme: '#F44336'
+      icon: solar:chat-square-like-bold-duotone
       title: 社交
       url: /friends/
 
     - id: music
       theme: '#31C27C'
-      icon: solar:music-note-2-bold-duotone
+      icon: https://204714.xyz/file/1779690907484_image.png
       title: QQ音乐
       url: /music/
 
