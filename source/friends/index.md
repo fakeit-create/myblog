@@ -8,14 +8,12 @@ comments: false
 
 ## 联系我
 
-- GitHub：[fakeit—create](https://github/fakeit-create/)
+- GitHub：[fakeit—create](https://github.com/fakeit-create)
 - QQ：2732282759
 - 邮箱：27322827592@qq.com
-- 哔哩哔哩：
 
 ## 友情链接
 
-- [朋友的网站名称](https://example.com/)：在这里填写网站介绍。
 
 ## 申请友链
 
