@@ -8,10 +8,10 @@ comments: false
 
 ## 联系我
 
-- GitHub：[填写你的 GitHub 地址](https://github.com/)
-- QQ：填写你的 QQ 号
-- 邮箱：填写你的邮箱
-- 哔哩哔哩：[填写你的个人主页](https://space.bilibili.com/)
+- GitHub：[fakeit—create](https://github/fakeit-create/)
+- QQ：2732282759
+- 邮箱：27322827592@qq.com
+- 哔哩哔哩：
 
 ## 友情链接
 
