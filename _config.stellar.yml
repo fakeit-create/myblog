@@ -8,7 +8,7 @@ stellar:
 
 
 ######## head tags ########
-favicon: /SF Background.jpg
+favicon: /favicon.png
 
 preconnect:
   # - https://gcore.jsdelivr.net
