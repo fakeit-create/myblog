@@ -65,7 +65,7 @@ menubar:
 
     - id: music
       theme: '#31C27C'
-      icon: https://204714.xyz/file/1779690907484_image.png
+      icon: solar:music-note-2-bold-duotone
       title: QQ音乐
       url: /music/
 
