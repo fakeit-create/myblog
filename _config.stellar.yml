@@ -57,7 +57,7 @@ menubar:
       title: 探索
       url: /explore/
 
-    - id: social
+    - id: friends
       theme: '#F44336'
       icon: solar:chat-square-like-bold-duotone
       title: 社交
