@@ -2,6 +2,7 @@
 title: 探索
 layout: page
 permalink: /explore/
+menu_id: explore
 comments: false
 ---
 

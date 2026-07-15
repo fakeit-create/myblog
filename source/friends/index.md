@@ -2,7 +2,8 @@
 title: 社交与友链
 layout: page
 permalink: /friends/
-comments: true
+menu_id: friends
+comments: false
 ---
 
 ## 联系我

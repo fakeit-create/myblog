@@ -1,7 +1,8 @@
 ---
-title: QQ 音乐
+title: QQ音乐
 layout: page
 permalink: /music/
+menu_id: music
 comments: false
 ---
 
@@ -14,7 +15,7 @@ comments: false
 <meting-js
   server="tencent"
   type="playlist"
-  id="2076419485"
+  id="9579594761"
   fixed="false"
   mini="false"
   autoplay="false"
