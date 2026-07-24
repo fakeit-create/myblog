@@ -1,0 +1,14 @@
+name: 408
+title: 408 考研笔记
+subtitle: 数据结构、计算机组成原理、操作系统、计算机网络
+
+icon: solar:notebook-bookmark-bold-duotone
+
+description: |
+  持续整理 408 统考四门课程的重点知识、易错点、公式和代码。
+
+cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg
+
+search:
+  filter: /wiki/408/
+  placeholder: 在 408 笔记中搜索
