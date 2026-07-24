@@ -2,7 +2,7 @@
 layout: wiki
 title: 数据结构（DS）
 wiki: '408'
-menu_id: wiki
+menu_id: wiki408
 order: 1
 article:
   type: tech

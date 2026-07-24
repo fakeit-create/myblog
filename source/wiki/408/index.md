@@ -2,7 +2,7 @@
 layout: wiki
 title: 408 考研笔记
 wiki: '408'
-menu_id: wiki
+menu_id: wiki408
 order: 0
 article:
   type: tech

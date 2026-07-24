@@ -39,7 +39,7 @@ logo:
 
 # 侧边栏主功能导航菜单
 menubar:
-  columns: 6 # 每行最多显示 4 个
+  columns: 6
   items:
     - id: post
       theme: '#1BCDFC'

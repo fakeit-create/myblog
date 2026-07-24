@@ -1,11 +1,11 @@
-name: 408
+name: '408'
 title: 408 考研笔记
 subtitle: 数据结构、计算机组成原理、操作系统、计算机网络
-description: 408 计算机考研学习笔记
-icon: solar:notebook-bookmark-bold-duotone
-cover: 
-menu_id: wiki
+description: 计算机考研 408 学习笔记
+icon: solar:notebook-bold-duotone
 base_dir: /wiki/408/
+menu_id: wiki408
+
 tree:
   - index
   - data-structure
