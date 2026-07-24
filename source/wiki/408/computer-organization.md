@@ -1,9 +1,9 @@
 ---
 layout: wiki
 title: 计算机组成原理（CO）
-wiki: 408
+wiki: '408'
+menu_id: wiki
 order: 2
-menu_id: wiki408
 article:
   type: tech
 ---

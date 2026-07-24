@@ -1,9 +1,9 @@
 ---
 layout: wiki
 title: 计算机网络（CN）
-wiki: 408
+wiki: '408'
+menu_id: wiki
 order: 4
-menu_id: wiki408
 article:
   type: tech
 ---

@@ -1,9 +1,9 @@
 ---
 layout: wiki
 title: 操作系统（OS）
-wiki: 408
+wiki: '408'
+menu_id: wiki
 order: 3
-menu_id: wiki408
 article:
   type: tech
 ---

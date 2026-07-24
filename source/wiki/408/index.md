@@ -1,9 +1,9 @@
 ---
 layout: wiki
 title: 408 考研笔记
-wiki: 408
+wiki: '408'
+menu_id: wiki
 order: 0
-menu_id: wiki408
 article:
   type: tech
 ---
