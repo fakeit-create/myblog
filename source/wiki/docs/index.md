@@ -28,10 +28,10 @@ article:
 
 | 模块 | 文件 | 当前内容 |
 |---|---|---|
-| 数据结构（DS） | `data-structure.md` | 栈、后缀表达式、快速排序及完整知识框架 |
-| 计算机组成原理（CO） | `computer-organization.md` | 数据表示、存储系统、指令系统、CPU、总线与 I/O |
-| 操作系统（OS） | `operating-system.md` | 进程、调度、同步、死锁、内存、文件与 I/O |
-| 计算机网络（CN） | `computer-network.md` | 体系结构、物理层、链路层、网络层、传输层与应用层 |
+| 数据结构（DS） | `data-structure.md` | 线性表、栈队列、串、树、图、查找、内外排序与算法 |
+| 计算机组成原理（CO） | `computer-organization.md` | 数据表示与运算、存储层次、指令、CPU、流水线、总线与 I/O |
+| 操作系统（OS） | `operating-system.md` | 进程线程、调度同步、死锁、内存、文件、磁盘与 I/O |
+| 计算机网络（CN） | `computer-network.md` | 体系结构、物理层、链路层、网络层、传输层、应用层与综合题 |
 
 ## 更新原则
 

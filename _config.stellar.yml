@@ -251,19 +251,20 @@ comments:
   # https://giscus.app/zh-CN
   giscus:
     src: https://giscus.app/client.js
-    data-repo: xxx/xxx # [在此输入仓库]
-    data-repo-id: # [在此输入仓库 ID]
-    data-category: # [在此输入分类名]
-    data-category-id:
+    data-repo: fakeit-create/myblog
+    data-repo-id: R_kgDO9Wtc2W
+    data-category: Announcements
+    data-category-id: DIC_kwDO9Wtc284DCCnJ
     data-mapping: pathname
     data-strict: 0
     data-reactions-enabled: 1
     data-emit-metadata: 0
-    data-input-position: top # top, bottom
+    data-input-position: bottom
     data-theme: preferred_color_scheme
     data-lang: zh-CN
-    data-loading: # lazy
     crossorigin: anonymous
+    async: true
+
 
   # Twikoo
   # https://twikoo.js.org/
