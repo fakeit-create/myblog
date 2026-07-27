@@ -253,8 +253,8 @@ comments:
     src: https://giscus.app/client.js
     data-repo: fakeit-create/myblog
     data-repo-id: R_kgDO9Wtc2W
-    data-category: Announcements
-    data-category-id: DIC_kwDO9Wtc284DCCnJ
+    data-category: General
+    data-category-id: DIC_kwDO9Wtc284DCCnK
     data-mapping: pathname
     data-strict: 0
     data-reactions-enabled: 1
