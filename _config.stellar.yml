@@ -241,6 +241,7 @@ comments:
     branch: main
   # utterances
   # https://utteranc.es/
+  utterances:
     repo: fakeit-create/myblog
     issue-term: pathname
     issue-number:
