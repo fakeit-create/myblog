@@ -69,13 +69,6 @@ article:
 <span style="color:#1677c8;font-weight:700">我的记录（原样保留）</span>
 
 ```c
-/*
- * @FilePath: \undefinedc:\Users\Administrator\Desktop\Qsort.c
- * @Date: 2026-07-14 14:38:01
- * @创建人: 彭新桥(pengxinqiao@dcwl.com)
- * @描述: 
- * 版权所有：安徽点触网络科技有限公司
- */
 //枚举法，快排法。
 /// @brief 升序快排
 /// @param A 
@@ -97,66 +90,6 @@ void Qsort(int A[],int L, int R)
         swap(A[i],A[j]);
     }
     swap(A[L],A[i]);
-    Qsort(A,L,i-1);
-    Qsort(A,i+1,R);
-}
-
-void Qsort(int A[],int L, int R)
-{
-    if(L>=R)
-    return;
-    int i = L,j = R;
-    int pivot = A[L];
-    while(L<R)
-    {
-        while(i<j && A[i]<pivot)
-        i++;
-        while(i<j && A[j]>pivot)
-        j++;
-        if(i<j)
-        swap(A[i],A[j]);
-    }
-    swap(A[L],A[i]);
-    Qsort(A,L,i-1);
-    Qsort(A,i+1,R);
-}
-
-void Qsort(int A[], int L, int R)
-{
-    if (L>=R)
-    return;
-    int i=L,j=R;
-    int pivot=A[L];
-    while(L<R)
-    {
-        while(i<j && A[i]<pivot)
-        i++;
-        while(i<j && A[j]>pivot)
-        j--;
-        if(i<j)
-        swap(A[i],A[j]);
-    }
-    swap(A[i],A[L]);
-    Qsort(A,L,i-1);
-    Qsort(A,i+1,R); 
-}
-
-void Qsort(int A[],int L,int R)
-{
-    if (L>=R)
-    return;
-    int i = L,j = R;
-    int pivot = A[L];
-    while(L<R)
-    {
-        while(i<j && A[i]<pivot)
-        i++;
-        while(i<j && A[j]>pivot)
-        j--;
-        if(i<j)
-        swap(A[i],A[j]);
-    }
-    swap(A[i],A[L]);
     Qsort(A,L,i-1);
     Qsort(A,i+1,R);
 }
