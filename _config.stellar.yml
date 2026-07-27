@@ -645,7 +645,7 @@ style:
     code: 85% # 相较于其所在行的文本大小，建议用百分比
     codeblock: 0.8125rem # 13px
   font-family:
-    body: '"Inter", "HarmonyOS Sans SC", "Microsoft Yahei", system-ui, sans-serif'
+    body: 'Inter, "HarmonyOS Sans SC", "Noto Sans SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif'
     code: '"JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace'
     codeblock: '"JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace'
   text-align: left
