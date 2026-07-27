@@ -25,21 +25,13 @@
     addEventListener('resize', requestProgress, { passive: true });
     updateProgress();
 
-    // Reveal only main cards. IntersectionObserver stops watching after the first reveal.
-    const targets = document.querySelectorAll('.post-list .post-card, .l_main > article');
-    if ('IntersectionObserver' in window && !reduced) {
-      const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('cyber-visible');
-          observer.unobserve(entry.target);
-        }
-      }), { rootMargin: '0px 0px -5% 0px', threshold: .05 });
-      targets.forEach((target, index) => {
-        target.classList.add('cyber-reveal');
-        target.style.transitionDelay = `${Math.min(index % 5, 4) * 35}ms`;
-        observer.observe(target);
-      });
-    } else targets.forEach(target => target.classList.add('cyber-visible'));
+    // Content must always be visible. Previous reveal code could leave whole
+    // articles at opacity: 0 when navigation replaced content dynamically.
+    document.querySelectorAll('.cyber-reveal').forEach(element => {
+      element.classList.remove('cyber-reveal');
+      element.classList.add('cyber-visible');
+      element.style.removeProperty('transition-delay');
+    });
 
     // Native canvas particles: no dependency, capped DPR/count, 30 FPS and paused off-tab.
     if (reduced) return;
