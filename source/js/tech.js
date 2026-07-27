@@ -6,6 +6,49 @@
   ready(() => {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+
+    // Correct the two legacy components with inline !important declarations.
+    // This survives article-local <style> blocks, theme source order and PJAX-like swaps.
+    const forceReadableLegacyUI = (root = document) => {
+      const colors = {
+        'k408-user': ['#102d4a', '#58b3ff'],
+        'k408-extra': ['#12372b', '#54d99a'],
+        'k408-warn': ['#403313', '#f2bd46'],
+        'k408-source': ['#30234d', '#ae8cff']
+      };
+      root.querySelectorAll?.('.k408-user,.k408-extra,.k408-warn,.k408-source').forEach(box => {
+        const key = Object.keys(colors).find(name => box.classList.contains(name));
+        if (!key) return;
+        box.style.setProperty('background', colors[key][0], 'important');
+        box.style.setProperty('background-color', colors[key][0], 'important');
+        box.style.setProperty('border-left-color', colors[key][1], 'important');
+        box.style.setProperty('color', '#f7fbff', 'important');
+        box.style.setProperty('opacity', '1', 'important');
+        box.querySelectorAll('*').forEach(child => {
+          child.style.setProperty('color', 'inherit', 'important');
+          child.style.setProperty('opacity', '1', 'important');
+          child.style.setProperty('text-shadow', 'none', 'important');
+        });
+      });
+      root.querySelectorAll?.('.navbar-blur,.navbar-container,.navbar nav,.navbar nav a').forEach(el => {
+        el.style.setProperty('text-shadow', 'none', 'important');
+        el.style.setProperty('filter', 'none', 'important');
+        el.style.setProperty('box-shadow', 'none', 'important');
+      });
+    };
+    forceReadableLegacyUI();
+    // Stellar may replace the main region without a full reload. Observe only
+    // direct subtree insertions and batch repairs into one animation frame.
+    let repairQueued = false;
+    const repairObserver = new MutationObserver(records => {
+      if (!records.some(record => record.addedNodes.length)) return;
+      if (!repairQueued) {
+        repairQueued = true;
+        requestAnimationFrame(() => { repairQueued = false; forceReadableLegacyUI(); });
+      }
+    });
+    repairObserver.observe(document.body, { childList: true, subtree: true });
+
     // Reading progress: one passive listener and one requestAnimationFrame per visual update.
     const bar = document.createElement('div');
     bar.id = 'cyber-progress';

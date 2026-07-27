@@ -351,3 +351,91 @@ input, textarea, .search-input, button, .button { border-color: #35506a !importa
   #tech-particles { opacity: .25; }
   .l_left .leftbar-container { border-radius: 0; border-left: 0; backdrop-filter: none; }
 }
+
+
+/* v4 corrective layer -------------------------------------------------------
+   These selectors target Stellar's REAL sticky navbar (.navbar-blur), rather
+   than only the unrelated tag-plugin navbar. */
+.navbar,
+.navbar-blur,
+.navbar-container,
+.navbar nav,
+.navbar nav p {
+  text-shadow: none !important;
+  filter: none !important;
+}
+.navbar-blur {
+  background: #111a2a !important;
+  border: 1px solid #465a75 !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .22) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.navbar-blur::before,
+.navbar-blur::after,
+.navbar-container::before,
+.navbar-container::after {
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.navbar nav a,
+.navbar nav a:link,
+.navbar nav a:visited {
+  color: #dbe7f5 !important;
+  background: transparent !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.navbar nav a.active,
+.navbar nav a:hover {
+  color: #ffffff !important;
+  background: #263b58 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* Keep the original 408 text verbatim, but use dark opaque surfaces so the
+   inherited high-contrast text can never become white-on-pastel. */
+body .l_main .md-text div.k408-user,
+body .l_main article div.k408-user { background-color: #102d4a !important; border-color: #58b3ff !important; color: #f7fbff !important; }
+body .l_main .md-text div.k408-extra,
+body .l_main article div.k408-extra { background-color: #12372b !important; border-color: #54d99a !important; color: #f7fbff !important; }
+body .l_main .md-text div.k408-warn,
+body .l_main article div.k408-warn { background-color: #403313 !important; border-color: #f2bd46 !important; color: #fffdf5 !important; }
+body .l_main .md-text div.k408-source,
+body .l_main article div.k408-source { background-color: #30234d !important; border-color: #ae8cff !important; color: #fbf8ff !important; }
+body .l_main div:is(.k408-user,.k408-extra,.k408-warn,.k408-source) :is(p,strong,b,span,a,br) {
+  color: inherit !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+/* Motion is decorative only: content starts and remains visible. */
+@keyframes tech-grid-drift { to { background-position: 48px 48px, 48px 48px; } }
+@keyframes tech-border-pulse {
+  0%, 100% { border-color: #29435f; }
+  50% { border-color: #3f6b8d; }
+}
+body::before { animation: tech-grid-drift 28s linear infinite; }
+.post-list .post-card,
+.md-text div:is(.k408-user,.k408-extra,.k408-warn,.k408-source),
+.tag-plugin.note {
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  .post-list .post-card:hover,
+  .md-text div:is(.k408-user,.k408-extra,.k408-warn,.k408-source):hover,
+  .tag-plugin.note:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, .20) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; }
+}
