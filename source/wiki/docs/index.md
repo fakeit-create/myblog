@@ -146,7 +146,7 @@ article:
 - [计算机组成原理：第十七章·真题融合复习地图](computer-organization/)
 - [操作系统：第二十一章·真题融合复习地图](operating-system/)
 - [计算机网络：第十八章·真题融合复习地图](computer-network/)
-- [跨科、公式与错题索引](cross-subject-index/)
+- [跨科、公式与错题索引](cross-subject/)
 
 ### 核验状态说明
 
