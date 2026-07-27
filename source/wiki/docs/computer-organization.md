@@ -1,5 +1,5 @@
 ---
-layout: wiki
+layout: page
 title: 计算机组成原理（CO）
 wiki: docs
 menu_id: wiki

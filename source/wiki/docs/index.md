@@ -1,5 +1,5 @@
 ---
-layout: wiki
+layout: page
 title: 408 考研笔记
 wiki: docs
 menu_id: wiki

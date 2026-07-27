@@ -1,5 +1,5 @@
 ---
-layout: wiki
+layout: page
 title: 计算机网络（CN）
 wiki: docs
 menu_id: wiki

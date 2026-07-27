@@ -1,5 +1,5 @@
 ---
-layout: wiki
+layout: page
 title: 数据结构（DS）
 wiki: docs
 menu_id: wiki

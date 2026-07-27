@@ -1,5 +1,5 @@
 ---
-layout: wiki
+layout: page
 title: 操作系统（OS）
 wiki: docs
 menu_id: wiki
