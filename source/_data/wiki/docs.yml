@@ -1,13 +1,15 @@
-# 408 笔记使用 docs 作为 Wiki 项目标识，对应访问路径 /wiki/docs/
 name: 408考研笔记
 title: 408 考研笔记
 subtitle: 数据结构、计算机组成原理、操作系统、计算机网络
+
 tags:
   - 408
   - 考研
   - 计算机
+
 icon: solar:notebook-bookmark-bold-duotone
 description: 计算机考研 408 四门课程学习笔记。
+base_dir: /wiki/docs/
 menu_id: wiki
 
 search:
@@ -21,3 +23,15 @@ leftbar:
 
 rightbar:
   - toc
+
+tree:
+  408考研笔记:
+    - index
+  数据结构:
+    - data-structure
+  计算机组成原理:
+    - computer-organization
+  操作系统:
+    - operating-system
+  计算机网络:
+    - computer-network
