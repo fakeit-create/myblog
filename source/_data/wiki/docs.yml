@@ -1,5 +1,5 @@
 name: 408考研笔记
-title: 408 考研笔记
+title: 408考研笔记
 subtitle: 数据结构、计算机组成原理、操作系统、计算机网络
 
 tags:
@@ -8,13 +8,13 @@ tags:
   - 计算机
 
 icon: solar:notebook-bookmark-bold-duotone
-description: 计算机考研 408 四门课程学习笔记。
-base_dir: /wiki/docs/
+description: 计算机考研408四门课程学习笔记与历年真题。
+base_dir: wiki/docs/
 menu_id: wiki
 
 search:
   filter: /wiki/docs/
-  placeholder: 在 408 笔记中搜索
+  placeholder: 在408笔记中搜索
 
 leftbar:
   - tree
@@ -27,11 +27,32 @@ rightbar:
 tree:
   408考研笔记:
     - index
-  数据结构:
+
+  四门课程:
     - data-structure
-  计算机组成原理:
     - computer-organization
-  操作系统:
     - operating-system
-  计算机网络:
     - computer-network
+
+  综合复习:
+    - cross-subject
+
+  历年真题:
+    - questions-index
+    - questions-2009
+    - questions-2010
+    - questions-2011
+    - questions-2012
+    - questions-2013
+    - questions-2014
+    - questions-2015
+    - questions-2016
+    - questions-2017
+    - questions-2018
+    - questions-2019
+    - questions-2020
+    - questions-2021
+    - questions-2022
+    - questions-2023
+    - questions-2024
+    - questions-2025
