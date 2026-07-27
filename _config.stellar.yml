@@ -34,7 +34,7 @@ structured_data:
 # 左上角显示的 logo 区域，包含图标、大标题、副标题
 logo:
   avatar: '[https://204714.xyz/file/1780995706299_SF_Background.jpg](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
-  title: '[Blog of feng](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
+  title: '[FENG // LAB](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
   subtitle: '{config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
 
 # 侧边栏主功能导航菜单
@@ -637,7 +637,7 @@ plugins:
 
 
 style:
-  prefers_theme: auto # auto / light / dark
+  prefers_theme: dark # auto / light / dark
   smooth_scroll: true # true / false 开启时如果目录过长可能无法准确定位
   font-size:
     root: 16px # 改这个会影响全局所有文字的字号
@@ -645,9 +645,9 @@ style:
     code: 85% # 相较于其所在行的文本大小，建议用百分比
     codeblock: 0.8125rem # 13px
   font-family:
-    body: 'system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif'
-    code: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
-    codeblock: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
+    body: '"Inter", "HarmonyOS Sans SC", "Microsoft Yahei", system-ui, sans-serif'
+    code: '"JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace'
+    codeblock: '"JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace'
   text-align: left
   prefix:
     h2: https://api.iconify.design/ci:heading-h2.svg
@@ -661,9 +661,9 @@ style:
     image-s: 8px # 评论区图片圆角（部分评论支持）
   color:
     # 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）
-    theme: 'hsl(192 98% 55%)' # 主题色
-    accent: 'hsl(14 100% 57%)' # 强调色
-    link: 'hsl(207 90% 54%)' # 超链接颜色
+    theme: 'hsl(187 100% 50%)' # 主题色
+    accent: 'hsl(268 100% 68%)' # 强调色
+    link: 'hsl(187 100% 50%)' # 超链接颜色
   animated_avatar:
     animate: auto # auto, always
     background: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp
@@ -678,7 +678,7 @@ style:
   leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
     background-color: var(--card) # var(--block)
-    background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
+    # background-image: none
     blur-px: 100px
     blur-bg: var(--bg-a60)
     background-opacity: 0.8

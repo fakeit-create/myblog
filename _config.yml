@@ -3,15 +3,15 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: feng's blog
-subtitle: 'A line of code|Go Anywhere You Want'
-description: 0w0
+title: FENG // LAB
+subtitle: 'CODE THE FUTURE|探索 · 构建 · 记录'
+description: 记录计算机技术、408 学习与创造过程的个人实验室
 author: feng
 language: zh-CN
 timezone: 'Asia/Shanghai'
 
 # URL
-url: https://fakeit-create.github.io
+url: https://p.204714.xyz
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -90,6 +90,13 @@ pagination_dir: page
 include:
 exclude:
 ignore:
+
+# Custom front-end assets
+inject:
+  head:
+    - '<link rel="stylesheet" href="/css/tech.css?v=1.0.0">'
+  script:
+    - '<script src="/js/tech.js?v=1.0.0" defer></script>'
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
