@@ -39,7 +39,7 @@ logo:
 
 # 侧边栏主功能导航菜单
 menubar:
-  columns: 6
+  columns: 5
   items:
     - id: post
       theme: '#1BCDFC'
@@ -50,15 +50,8 @@ menubar:
     - id: wiki
       theme: '#3DC550'
       icon: solar:notebook-bookmark-bold-duotone
-      title: 文档
-      url: /wiki/docs/
-
-    - id: wiki408
-      theme: '#8B5CF6'
-      icon: solar:notebook-bold-duotone
       title: 408笔记
-      url: /wiki/408/
-
+      url: /wiki/docs/
     - id: explore
       theme: '#FA6400'
       icon: solar:planet-bold-duotone
