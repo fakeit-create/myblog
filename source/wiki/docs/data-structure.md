@@ -69,6 +69,13 @@ article:
 <span style="color:#1677c8;font-weight:700">我的记录（原样保留）</span>
 
 ```c
+/*
+ * @FilePath: \undefinedc:\Users\Administrator\Desktop\Qsort.c
+ * @Date: 2026-07-14 14:38:01
+ * @创建人: 彭新桥(pengxinqiao@dcwl.com)
+ * @描述: 
+ * 版权所有：安徽点触网络科技有限公司
+ */
 //枚举法，快排法。
 /// @brief 升序快排
 /// @param A 
@@ -90,6 +97,66 @@ void Qsort(int A[],int L, int R)
         swap(A[i],A[j]);
     }
     swap(A[L],A[i]);
+    Qsort(A,L,i-1);
+    Qsort(A,i+1,R);
+}
+
+void Qsort(int A[],int L, int R)
+{
+    if(L>=R)
+    return;
+    int i = L,j = R;
+    int pivot = A[L];
+    while(L<R)
+    {
+        while(i<j && A[i]<pivot)
+        i++;
+        while(i<j && A[j]>pivot)
+        j++;
+        if(i<j)
+        swap(A[i],A[j]);
+    }
+    swap(A[L],A[i]);
+    Qsort(A,L,i-1);
+    Qsort(A,i+1,R);
+}
+
+void Qsort(int A[], int L, int R)
+{
+    if (L>=R)
+    return;
+    int i=L,j=R;
+    int pivot=A[L];
+    while(L<R)
+    {
+        while(i<j && A[i]<pivot)
+        i++;
+        while(i<j && A[j]>pivot)
+        j--;
+        if(i<j)
+        swap(A[i],A[j]);
+    }
+    swap(A[i],A[L]);
+    Qsort(A,L,i-1);
+    Qsort(A,i+1,R); 
+}
+
+void Qsort(int A[],int L,int R)
+{
+    if (L>=R)
+    return;
+    int i = L,j = R;
+    int pivot = A[L];
+    while(L<R)
+    {
+        while(i<j && A[i]<pivot)
+        i++;
+        while(i<j && A[j]>pivot)
+        j--;
+        if(i<j)
+        swap(A[i],A[j]);
+    }
+    swap(A[i],A[L]);
     Qsort(A,L,i-1);
     Qsort(A,i+1,R);
 }
@@ -592,3 +659,29 @@ static void quick_sort(int A[], int left, int right) {
 | 年份 | 题号 | 主考点 | 关联考点 | 答案/结论 | 解析位置 |
 |---:|---:|---|---|---|---|
 | 待逐卷核验 | — | — | — | — | — |
+
+
+<a id="历年真题跳转"></a>
+## 历年真题跳转
+
+数据结构在统考卷中通常对应 **第 1—11、41—42 题**。以下链接可直接进入各年试卷的本科目区域：
+
+- [2009 年数据结构真题](../questions-2009/#subject-ds)
+- [2010 年数据结构真题](../questions-2010/#subject-ds)
+- [2011 年数据结构真题](../questions-2011/#subject-ds)
+- [2012 年数据结构真题](../questions-2012/#subject-ds)
+- [2013 年数据结构真题](../questions-2013/#subject-ds)
+- [2014 年数据结构真题](../questions-2014/#subject-ds)
+- [2015 年数据结构真题](../questions-2015/#subject-ds)
+- [2016 年数据结构真题](../questions-2016/#subject-ds)
+- [2017 年数据结构真题](../questions-2017/#subject-ds)
+- [2018 年数据结构真题](../questions-2018/#subject-ds)
+- [2019 年数据结构真题](../questions-2019/#subject-ds)
+- [2020 年数据结构真题](../questions-2020/#subject-ds)
+- [2021 年数据结构真题](../questions-2021/#subject-ds)
+- [2022 年数据结构真题](../questions-2022/#subject-ds)
+- [2023 年数据结构真题](../questions-2023/#subject-ds)
+- [2024 年数据结构真题](../questions-2024/#subject-ds)
+- [2025 年数据结构真题](../questions-2025/#subject-ds)
+
+- [查看 408 历年真题总索引](../questions-index/)

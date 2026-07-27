@@ -676,3 +676,29 @@ HTTP 耗时不能固定背“若干 RTT”：必须确认 DNS 是否缓存、对
 | 年份 | 题号 | 主考点 | 协议层/关键条件 | 答案/结论 | 解析位置 |
 |---:|---:|---|---|---|---|
 | 待逐卷核验 | — | — | — | — | — |
+
+
+<a id="历年真题跳转"></a>
+## 历年真题跳转
+
+计算机网络在统考卷中通常对应 **第 33—40、47 题**。以下链接可直接进入各年试卷的本科目区域：
+
+- [2009 年计算机网络真题](../questions-2009/#subject-cn)
+- [2010 年计算机网络真题](../questions-2010/#subject-cn)
+- [2011 年计算机网络真题](../questions-2011/#subject-cn)
+- [2012 年计算机网络真题](../questions-2012/#subject-cn)
+- [2013 年计算机网络真题](../questions-2013/#subject-cn)
+- [2014 年计算机网络真题](../questions-2014/#subject-cn)
+- [2015 年计算机网络真题](../questions-2015/#subject-cn)
+- [2016 年计算机网络真题](../questions-2016/#subject-cn)
+- [2017 年计算机网络真题](../questions-2017/#subject-cn)
+- [2018 年计算机网络真题](../questions-2018/#subject-cn)
+- [2019 年计算机网络真题](../questions-2019/#subject-cn)
+- [2020 年计算机网络真题](../questions-2020/#subject-cn)
+- [2021 年计算机网络真题](../questions-2021/#subject-cn)
+- [2022 年计算机网络真题](../questions-2022/#subject-cn)
+- [2023 年计算机网络真题](../questions-2023/#subject-cn)
+- [2024 年计算机网络真题](../questions-2024/#subject-cn)
+- [2025 年计算机网络真题](../questions-2025/#subject-cn)
+
+- [查看 408 历年真题总索引](../questions-index/)

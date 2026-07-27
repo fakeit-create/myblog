@@ -725,3 +725,29 @@ VA → 虚页号+页内偏移 → TLB/页表 → PA → Cache组号/标记/块�
 | 年份 | 题号 | 主考点 | 机器模型/关键条件 | 答案/结论 | 解析位置 |
 |---:|---:|---|---|---|---|
 | 待逐卷核验 | — | — | — | — | — |
+
+
+<a id="历年真题跳转"></a>
+## 历年真题跳转
+
+计算机组成原理在统考卷中通常对应 **第 12—22、43—44 题**。以下链接可直接进入各年试卷的本科目区域：
+
+- [2009 年计算机组成原理真题](../questions-2009/#subject-co)
+- [2010 年计算机组成原理真题](../questions-2010/#subject-co)
+- [2011 年计算机组成原理真题](../questions-2011/#subject-co)
+- [2012 年计算机组成原理真题](../questions-2012/#subject-co)
+- [2013 年计算机组成原理真题](../questions-2013/#subject-co)
+- [2014 年计算机组成原理真题](../questions-2014/#subject-co)
+- [2015 年计算机组成原理真题](../questions-2015/#subject-co)
+- [2016 年计算机组成原理真题](../questions-2016/#subject-co)
+- [2017 年计算机组成原理真题](../questions-2017/#subject-co)
+- [2018 年计算机组成原理真题](../questions-2018/#subject-co)
+- [2019 年计算机组成原理真题](../questions-2019/#subject-co)
+- [2020 年计算机组成原理真题](../questions-2020/#subject-co)
+- [2021 年计算机组成原理真题](../questions-2021/#subject-co)
+- [2022 年计算机组成原理真题](../questions-2022/#subject-co)
+- [2023 年计算机组成原理真题](../questions-2023/#subject-co)
+- [2024 年计算机组成原理真题](../questions-2024/#subject-co)
+- [2025 年计算机组成原理真题](../questions-2025/#subject-co)
+
+- [查看 408 历年真题总索引](../questions-index/)

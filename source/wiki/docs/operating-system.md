@@ -565,3 +565,29 @@ SPOOLing 利用磁盘上的输入井、输出井以及输入/输出进程，把�
 | 年份 | 题号 | 主考点 | 状态/时间线关键条件 | 答案/结论 | 解析位置 |
 |---:|---:|---|---|---|---|
 | 待逐卷核验 | — | — | — | — | — |
+
+
+<a id="历年真题跳转"></a>
+## 历年真题跳转
+
+操作系统在统考卷中通常对应 **第 23—32、45—46 题**。以下链接可直接进入各年试卷的本科目区域：
+
+- [2009 年操作系统真题](../questions-2009/#subject-os)
+- [2010 年操作系统真题](../questions-2010/#subject-os)
+- [2011 年操作系统真题](../questions-2011/#subject-os)
+- [2012 年操作系统真题](../questions-2012/#subject-os)
+- [2013 年操作系统真题](../questions-2013/#subject-os)
+- [2014 年操作系统真题](../questions-2014/#subject-os)
+- [2015 年操作系统真题](../questions-2015/#subject-os)
+- [2016 年操作系统真题](../questions-2016/#subject-os)
+- [2017 年操作系统真题](../questions-2017/#subject-os)
+- [2018 年操作系统真题](../questions-2018/#subject-os)
+- [2019 年操作系统真题](../questions-2019/#subject-os)
+- [2020 年操作系统真题](../questions-2020/#subject-os)
+- [2021 年操作系统真题](../questions-2021/#subject-os)
+- [2022 年操作系统真题](../questions-2022/#subject-os)
+- [2023 年操作系统真题](../questions-2023/#subject-os)
+- [2024 年操作系统真题](../questions-2024/#subject-os)
+- [2025 年操作系统真题](../questions-2025/#subject-os)
+
+- [查看 408 历年真题总索引](../questions-index/)
