@@ -10,7 +10,7 @@ article:
 
 # 2023 年计算机学科专业基础综合真题
 
-[打开原卷 PDF](/files/408/2023-paper.pdf) · [打开解析 PDF](/files/408/2023-analysis.pdf) · [返回真题总索引](../questions-index/)
+[打开原卷 PDF](/files/408/2023-paper.pdf) · [打开解析 PDF](/files/408/2023-analysis.pdf) · [返回真题总索引](../questions/)
 
 > 本页提供稳定题号锚点和原始 PDF。完整题干、图表、答案以 PDF 为准，避免扫描识别错误。
 

@@ -684,4 +684,4 @@ static void quick_sort(int A[], int left, int right) {
 - [2024 年数据结构真题](../questions-2024/#subject-ds)
 - [2025 年数据结构真题](../questions-2025/#subject-ds)
 
-- [查看 408 历年真题总索引](../questions-index/)
+- [查看 408 历年真题总索引](../questions/)

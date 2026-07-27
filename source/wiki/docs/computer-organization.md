@@ -750,4 +750,4 @@ VA → 虚页号+页内偏移 → TLB/页表 → PA → Cache组号/标记/块�
 - [2024 年计算机组成原理真题](../questions-2024/#subject-co)
 - [2025 年计算机组成原理真题](../questions-2025/#subject-co)
 
-- [查看 408 历年真题总索引](../questions-index/)
+- [查看 408 历年真题总索引](../questions/)

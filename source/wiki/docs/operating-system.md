@@ -590,4 +590,4 @@ SPOOLing 利用磁盘上的输入井、输出井以及输入/输出进程，把�
 - [2024 年操作系统真题](../questions-2024/#subject-os)
 - [2025 年操作系统真题](../questions-2025/#subject-os)
 
-- [查看 408 历年真题总索引](../questions-index/)
+- [查看 408 历年真题总索引](../questions/)

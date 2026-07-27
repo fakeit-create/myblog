@@ -701,4 +701,4 @@ HTTP 耗时不能固定背“若干 RTT”：必须确认 DNS 是否缓存、对
 - [2024 年计算机网络真题](../questions-2024/#subject-cn)
 - [2025 年计算机网络真题](../questions-2025/#subject-cn)
 
-- [查看 408 历年真题总索引](../questions-index/)
+- [查看 408 历年真题总索引](../questions/)
