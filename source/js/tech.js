@@ -4,8 +4,8 @@
     ? document.addEventListener('DOMContentLoaded', fn, { once: true }) : fn();
 
   ready(() => {
-    document.documentElement.dataset.techFx = 'v7-loaded';
-    console.info('[tech-fx] v7 loaded');
+    document.documentElement.dataset.techFx = 'v8-loaded';
+    console.info('[tech-fx] v8 loaded');
     const media = query => typeof matchMedia === 'function' && matchMedia(query).matches;
     const reduced = media('(prefers-reduced-motion: reduce)');
 
@@ -14,6 +14,7 @@
     const hud = document.createElement('div');
     hud.id = 'tech-hud-frame';
     hud.setAttribute('aria-hidden', 'true');
+    hud.innerHTML = '<i class="tech-circuit-node n1"></i><i class="tech-circuit-node n2"></i><i class="tech-circuit-node n3"></i><i class="tech-circuit-node n4"></i>';
     document.body.appendChild(hud);
 
 
@@ -163,6 +164,46 @@
         ripple.style.top = `${event.clientY}px`;
         document.body.appendChild(ripple);
         ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+      }, { passive: true });
+    }
+
+    // Rare title RGB fault: brief, infrequent and never hides the real title.
+    if (!reduced) {
+      const titleSelectors = '.md-text h1,.article-title,h1.post-title,.post-title';
+      const pulseTitle = () => {
+        const titles = [...document.querySelectorAll(titleSelectors)].filter(el => el.textContent.trim());
+        if (titles.length) {
+          const title = titles[Math.floor(Math.random() * titles.length)];
+          title.dataset.techTitle = title.textContent.trim();
+          title.classList.remove('tech-title-glitch');
+          void title.offsetWidth;
+          title.classList.add('tech-title-glitch');
+          setTimeout(() => title.classList.remove('tech-title-glitch'), 390);
+        }
+        setTimeout(pulseTitle, 7000 + Math.random() * 6000);
+      };
+      setTimeout(pulseTitle, 3500 + Math.random() * 2500);
+    }
+
+    // Lightweight magnetic feedback using event delegation; no per-button listeners.
+    if (!reduced && media('(hover: hover) and (pointer: fine)')) {
+      const magneticSelector = 'button,.btn,.tag-plugin.button,.navbar a,.nav-area a,.post-card';
+      let magneticTarget = null;
+      addEventListener('pointermove', event => {
+        const target = event.target.closest?.(magneticSelector);
+        if (magneticTarget && magneticTarget !== target) magneticTarget.style.translate = '';
+        magneticTarget = target;
+        if (!target) return;
+        const rect = target.getBoundingClientRect();
+        const dx = Math.max(-3, Math.min(3, (event.clientX - rect.left - rect.width / 2) * .035));
+        const dy = Math.max(-3, Math.min(3, (event.clientY - rect.top - rect.height / 2) * .035));
+        target.style.translate = `${dx}px ${dy}px`;
+      }, { passive: true });
+      addEventListener('pointerout', event => {
+        if (magneticTarget && !magneticTarget.contains(event.relatedTarget)) {
+          magneticTarget.style.translate = '';
+          magneticTarget = null;
+        }
       }, { passive: true });
     }
 

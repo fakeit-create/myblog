@@ -563,7 +563,7 @@ body::before { animation: tech-grid-drift 28s linear infinite; }
   border-radius: 50%;
   pointer-events: none;
   box-shadow: 0 0 15px rgba(69, 220, 255, .75);
-  animation: tech-ripple .68s cubic-bezier(.16,.7,.2,1) forwards;
+  animation: tech-ripple .45s cubic-bezier(.16,.7,.2,1) forwards;
 }
 @keyframes tech-ripple {
   to { opacity: 0; transform: scale(8); border-width: 0; }
@@ -726,4 +726,118 @@ body::before { animation: tech-grid-drift 28s linear infinite; }
   .md-text div:is(.k408-user,.k408-extra,.k408-warn,.k408-source)::after { animation: none !important; display: none; }
   .md-text h2::after { animation: none !important; }
   #cyber-progress { transition: none; }
+}
+
+
+/* v8 exact lightweight effects */
+/* 4. Rare, brief RGB title fault; the original title remains fully readable. */
+.md-text h1,
+.article-title,
+h1.post-title,
+.post-title {
+  position: relative;
+}
+.tech-title-glitch::before,
+.tech-title-glitch::after {
+  content: attr(data-tech-title);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .42;
+  overflow: hidden;
+  white-space: inherit;
+}
+.tech-title-glitch::before {
+  color: #45dcff;
+  transform: translateX(1.5px);
+  clip-path: inset(18% 0 56% 0);
+  animation: tech-title-fault-a .34s steps(2, end) both;
+}
+.tech-title-glitch::after {
+  color: #ff5ca8;
+  transform: translateX(-1.5px);
+  clip-path: inset(62% 0 16% 0);
+  animation: tech-title-fault-b .34s steps(2, end) both;
+}
+@keyframes tech-title-fault-a {
+  35% { transform: translateX(-2px); opacity: .52; }
+  70% { transform: translateX(1px); opacity: .22; }
+  to { opacity: 0; }
+}
+@keyframes tech-title-fault-b {
+  30% { transform: translateX(2px); opacity: .45; }
+  65% { transform: translateX(-1px); opacity: .18; }
+  to { opacity: 0; }
+}
+
+/* 5. Circuit nodes travel around the viewport edge without covering content. */
+#tech-hud-frame .tech-circuit-node {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #bff8ff;
+  box-shadow: 0 0 5px #45dcff, 0 0 10px rgba(69,220,255,.65);
+  opacity: .62;
+  will-change: transform;
+}
+#tech-hud-frame .n1 { left: 0; top: 0; animation: tech-circuit-x 9s linear infinite; }
+#tech-hud-frame .n2 { right: 0; top: 0; animation: tech-circuit-y 11s linear infinite; }
+#tech-hud-frame .n3 { right: 0; bottom: 0; animation: tech-circuit-x-rev 13s linear infinite; }
+#tech-hud-frame .n4 { left: 0; bottom: 0; animation: tech-circuit-y-rev 10s linear infinite; }
+@keyframes tech-circuit-x { to { transform: translateX(calc(100vw - 32px)); } }
+@keyframes tech-circuit-y { to { transform: translateY(calc(100vh - 32px)); } }
+@keyframes tech-circuit-x-rev { to { transform: translateX(calc(-100vw + 32px)); } }
+@keyframes tech-circuit-y-rev { to { transform: translateY(calc(-100vh + 32px)); } }
+
+/* 7. Link/button energy feedback; JS adds a tiny independent magnetic translate. */
+a:not(.md-text a),
+button,
+.btn,
+.tag-plugin.button,
+.post-card {
+  transition: translate .16s ease, transform .16s ease, border-color .16s ease, box-shadow .16s ease !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  a:not(.md-text a):hover,
+  button:hover,
+  .btn:hover,
+  .tag-plugin.button:hover {
+    border-color: rgba(103,224,255,.72) !important;
+    box-shadow: 0 0 0 1px rgba(69,220,255,.12), 0 5px 15px rgba(17,112,170,.20) !important;
+  }
+}
+
+/* Broaden card scan support across Stellar card variants. */
+.post-card,
+article.post,
+.post-list .post-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.post-card::after,
+article.post::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  inset: -60% auto -60% -35%;
+  width: 18%;
+  pointer-events: none;
+  opacity: 0;
+  transform: skewX(-18deg) translateX(-160%);
+  background: linear-gradient(90deg, transparent, rgba(118,230,255,.16), rgba(220,251,255,.25), transparent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .post-card:hover::after,
+  article.post:hover::after {
+    opacity: 1;
+    animation: tech-card-scan .72s cubic-bezier(.2,.65,.25,1) forwards;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tech-title-glitch::before,
+  .tech-title-glitch::after,
+  #tech-hud-frame .tech-circuit-node { display: none !important; animation: none !important; }
+  a, button, .btn, .tag-plugin.button, .post-card { translate: none !important; }
 }
