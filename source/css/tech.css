@@ -845,3 +845,42 @@ article.post::after {
 
 /* v8.1: pointer-following cyan ring/reticle removed. */
 #tech-pointer-aura { display: none !important; }
+
+
+/* v8.2 performance pass ---------------------------------------------------
+   Keep the visual identity while avoiding continuous paint/layout work. */
+body::before { animation: none !important; }
+#tech-hud-frame { filter: none; }
+#tech-hud-frame .n3,
+#tech-hud-frame .n4 { display: none; animation: none; }
+.md-text h2::after { animation: none; }
+.tech-page-ready .post-card,
+.tech-page-ready article.md-text,
+.tech-page-ready .widgets > * { animation: none !important; }
+.tech-click-ripple { box-shadow: 0 0 9px rgba(69,220,255,.55); will-change: transform, opacity; }
+#cyber-progress { transition: none; box-shadow: 0 0 6px rgba(69,220,255,.58); contain: strict; }
+#tech-particles { contain: strict; }
+#tech-loader::before { animation-duration: 1.6s; }
+.tech-loader-core::before { filter: none; }
+.tech-loader-core { box-shadow: 0 0 22px rgba(69,220,255,.16); }
+.tech-loader-core::after { box-shadow: 0 0 8px #fff, 0 0 20px rgba(69,220,255,.72); }
+
+/* Data-saver / low-memory / low-core fallback set by tech.js. */
+.tech-low-power #tech-particles,
+.tech-low-power #tech-hud-frame .tech-circuit-node { display: none !important; }
+.tech-low-power #tech-hud-frame { opacity: .28; }
+.tech-low-power #tech-loader::before,
+.tech-low-power .tech-loader-core::before,
+.tech-low-power .tech-loader-core::after { animation: none !important; }
+.tech-low-power .post-card::after,
+.tech-low-power article.post::after,
+.tech-low-power .md-text .tag-plugin.note::after,
+.tech-low-power .md-text div:is(.k408-user,.k408-extra,.k408-warn,.k408-source)::after { display: none !important; }
+
+@media (max-width: 768px), (hover: none), (pointer: coarse) {
+  #tech-hud-frame .tech-circuit-node { display: none !important; animation: none !important; }
+  #tech-particles { opacity: .30 !important; }
+  .post-card::after, article.post::after,
+  .md-text .tag-plugin.note::after,
+  .md-text div:is(.k408-user,.k408-extra,.k408-warn,.k408-source)::after { display: none !important; }
+}

@@ -94,9 +94,9 @@ ignore:
 # Custom front-end assets
 inject:
   head:
-    - '<link rel="stylesheet" href="/css/tech.css?v=8.1.0">'
+    - '<link rel="stylesheet" href="/css/tech.css?v=8.2.0">'
   script:
-    - '<script src="/js/tech.js?v=8.1.0" defer></script>'
+    - '<script src="/js/tech.js?v=8.2.0" defer></script>'
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/

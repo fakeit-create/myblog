@@ -4,10 +4,14 @@
     ? document.addEventListener('DOMContentLoaded', fn, { once: true }) : fn();
 
   ready(() => {
-    document.documentElement.dataset.techFx = 'v8.1-loaded';
-    console.info('[tech-fx] v8.1 loaded');
+    document.documentElement.dataset.techFx = 'v8.2-loaded';
+    console.info('[tech-fx] v8.2 optimized');
     const media = query => typeof matchMedia === 'function' && matchMedia(query).matches;
     const reduced = media('(prefers-reduced-motion: reduce)');
+    const saveData = navigator.connection?.saveData === true;
+    const lowPower = saveData || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4) ||
+      (navigator.deviceMemory > 0 && navigator.deviceMemory <= 4);
+    if (lowPower) document.documentElement.classList.add('tech-low-power');
 
 
     // Minimal viewport HUD; decorative and non-interactive.
@@ -30,7 +34,7 @@
       const finishLoading = () => {
         if (finishing) return;
         finishing = true;
-        const wait = Math.max(0, 950 - (performance.now() - shownAt));
+        const wait = Math.max(0, 360 - (performance.now() - shownAt));
         setTimeout(() => {
           loader.classList.add('is-done');
           document.body.classList.add('tech-page-ready');
@@ -40,7 +44,7 @@
       if (document.readyState === 'complete') finishLoading();
       else addEventListener('load', finishLoading, { once: true });
       // Safety cap: slow third-party resources cannot keep the overlay forever.
-      setTimeout(finishLoading, 1800);
+      setTimeout(finishLoading, 900);
     }
 
 
@@ -53,7 +57,11 @@
         'k408-warn': ['#403313', '#f2bd46'],
         'k408-source': ['#30234d', '#ae8cff']
       };
-      root.querySelectorAll?.('.k408-user,.k408-extra,.k408-warn,.k408-source').forEach(box => {
+      const legacySelector = '.k408-user,.k408-extra,.k408-warn,.k408-source';
+      const legacyBoxes = [];
+      if (root.nodeType === 1 && root.matches?.(legacySelector)) legacyBoxes.push(root);
+      root.querySelectorAll?.(legacySelector).forEach(box => legacyBoxes.push(box));
+      legacyBoxes.forEach(box => {
         const key = Object.keys(colors).find(name => box.classList.contains(name));
         if (!key) return;
         box.style.setProperty('background', colors[key][0], 'important');
@@ -67,7 +75,11 @@
           child.style.setProperty('text-shadow', 'none', 'important');
         });
       });
-      root.querySelectorAll?.('.navbar-blur,.navbar-container,.navbar nav,.navbar nav a').forEach(el => {
+      const navSelector = '.navbar-blur,.navbar-container,.navbar nav,.navbar nav a';
+      const navItems = [];
+      if (root.nodeType === 1 && root.matches?.(navSelector)) navItems.push(root);
+      root.querySelectorAll?.(navSelector).forEach(el => navItems.push(el));
+      navItems.forEach(el => {
         el.style.setProperty('text-shadow', 'none', 'important');
         el.style.setProperty('filter', 'none', 'important');
         el.style.setProperty('box-shadow', 'none', 'important');
@@ -77,11 +89,18 @@
     // Stellar may replace the main region without a full reload. Observe only
     // direct subtree insertions and batch repairs into one animation frame.
     let repairQueued = false;
+    const repairRoots = new Set();
     const repairObserver = new MutationObserver(records => {
-      if (!records.some(record => record.addedNodes.length)) return;
-      if (!repairQueued) {
+      for (const record of records) for (const node of record.addedNodes) {
+        if (node.nodeType === 1 && !node.matches?.('#tech-loader,.tech-click-ripple,#tech-hud-frame,#tech-particles')) repairRoots.add(node);
+      }
+      if (repairRoots.size && !repairQueued) {
         repairQueued = true;
-        requestAnimationFrame(() => { repairQueued = false; forceReadableLegacyUI(); });
+        requestAnimationFrame(() => {
+          repairQueued = false;
+          repairRoots.forEach(forceReadableLegacyUI);
+          repairRoots.clear();
+        });
       }
     });
     repairObserver.observe(document.body, { childList: true, subtree: true });
@@ -114,43 +133,20 @@
     });
 
 
-    // Desktop pointer effects: keep only the sparse ion trail and click ripple.
-    // The cyan ring/reticle that followed the pointer has been removed.
+    // Click feedback only. Pointer-following DOM particles and magnetic movement were
+    // removed: both caused repeated allocation/layout work during every mouse movement.
     if (!reduced && media('(hover: hover) and (pointer: fine)')) {
-      let lastPX = innerWidth / 2, lastPY = innerHeight / 2, lastIonAt = 0;
-      const ions = new Set();
-      const emitIon = (px, py, dx, dy) => {
-        const ion = document.createElement('i');
-        ion.className = 'tech-cursor-ion';
-        ion.setAttribute('aria-hidden', 'true');
-        ion.style.left = `${px}px`; ion.style.top = `${py}px`;
-        ion.style.setProperty('--ion-x', `${-dx * .10 + (Math.random() - .5) * 5}px`);
-        ion.style.setProperty('--ion-y', `${-dy * .10 + (Math.random() - .5) * 5}px`);
-        document.body.appendChild(ion); ions.add(ion);
-        const remove = () => { ions.delete(ion); ion.remove(); };
-        ion.addEventListener('animationend', remove, { once: true });
-        setTimeout(remove, 520);
-        if (ions.size > 14) { const oldest = ions.values().next().value; ions.delete(oldest); oldest.remove(); }
-      };
-      addEventListener('pointermove', event => {
-        const now = performance.now();
-        const dx = event.clientX - lastPX, dy = event.clientY - lastPY;
-        if (now - lastIonAt > 38 && dx * dx + dy * dy > 80) {
-          emitIon(event.clientX, event.clientY, dx, dy); lastIonAt = now;
-        }
-        lastPX = event.clientX; lastPY = event.clientY;
-      }, { passive: true });
-
-      // A single short-lived ripple per primary click; animation is CSS-composited.
       addEventListener('pointerdown', event => {
-        if (event.button !== 0) return;
+        if (event.button !== 0 || document.hidden) return;
         const ripple = document.createElement('i');
         ripple.className = 'tech-click-ripple';
         ripple.setAttribute('aria-hidden', 'true');
         ripple.style.left = `${event.clientX}px`;
         ripple.style.top = `${event.clientY}px`;
         document.body.appendChild(ripple);
-        ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+        const remove = () => ripple.remove();
+        ripple.addEventListener('animationend', remove, { once: true });
+        setTimeout(remove, 520);
       }, { passive: true });
     }
 
@@ -172,30 +168,10 @@
       setTimeout(pulseTitle, 3500 + Math.random() * 2500);
     }
 
-    // Lightweight magnetic feedback using event delegation; no per-button listeners.
-    if (!reduced && media('(hover: hover) and (pointer: fine)')) {
-      const magneticSelector = 'button,.btn,.tag-plugin.button,.navbar a,.nav-area a,.post-card';
-      let magneticTarget = null;
-      addEventListener('pointermove', event => {
-        const target = event.target.closest?.(magneticSelector);
-        if (magneticTarget && magneticTarget !== target) magneticTarget.style.translate = '';
-        magneticTarget = target;
-        if (!target) return;
-        const rect = target.getBoundingClientRect();
-        const dx = Math.max(-3, Math.min(3, (event.clientX - rect.left - rect.width / 2) * .035));
-        const dy = Math.max(-3, Math.min(3, (event.clientY - rect.top - rect.height / 2) * .035));
-        target.style.translate = `${dx}px ${dy}px`;
-      }, { passive: true });
-      addEventListener('pointerout', event => {
-        if (magneticTarget && !magneticTarget.contains(event.relatedTarget)) {
-          magneticTarget.style.translate = '';
-          magneticTarget = null;
-        }
-      }, { passive: true });
-    }
+    // Magnetic pointer tracking removed to avoid forced layout on pointermove.
 
     // Native canvas particles: no dependency, capped DPR/count, 30 FPS and paused off-tab.
-    if (reduced) return;
+    if (reduced || saveData) return;
     const canvas = document.createElement('canvas');
     canvas.id = 'tech-particles';
     canvas.setAttribute('aria-hidden', 'true');
@@ -211,16 +187,17 @@
       r: Math.random() * 1.45 + .65, a: Math.random() * .40 + .38
     });
     const resize = () => {
-      width = innerWidth; height = innerHeight; dpr = Math.min(devicePixelRatio || 1, 1.5);
+      width = innerWidth; height = innerHeight; dpr = Math.min(devicePixelRatio || 1, lowPower ? 1 : 1.25);
       canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(mobile.matches ? 30 : 64, Math.max(24, Math.round(width * height / 22000)));
+      const cap = mobile.matches ? 16 : (lowPower ? 22 : 36);
+      const count = Math.min(cap, Math.max(12, Math.round(width * height / 36000)));
       particles = Array.from({ length: count }, makeParticle);
     };
     const draw = time => {
       raf = requestAnimationFrame(draw);
-      if (time - last < 33) return; // ~30 FPS is enough for a subtle background.
+      if (time - last < (lowPower || mobile.matches ? 66 : 50)) return; // 15–20 FPS for a subtle background.
       last = time;
       ctx.clearRect(0, 0, width, height);
       for (const p of particles) {
@@ -230,11 +207,12 @@
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(116, 222, 255, ${p.a})`; ctx.fill();
       }
-      // Only nearby neighbors, and only every other particle, to keep comparisons low.
-      ctx.lineWidth = .55;
-      for (let i = 0; i < particles.length; i += 2) {
+      // Connections are skipped on mobile/low-power devices.
+      if (mobile.matches || lowPower) return;
+      ctx.lineWidth = .5;
+      for (let i = 0; i < particles.length; i += 3) {
         const a = particles[i];
-        for (let j = i + 1; j < Math.min(i + 7, particles.length); j++) {
+        for (let j = i + 1; j < Math.min(i + 5, particles.length); j++) {
           const b = particles[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx*dx + dy*dy;
           if (d2 < 8500) {
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
@@ -244,7 +222,7 @@
       }
     };
     let resizeTimer;
-    addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 160); }, { passive: true });
+    addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 240); }, { passive: true });
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
       else if (!raf) raf = requestAnimationFrame(draw);
