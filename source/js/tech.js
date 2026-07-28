@@ -4,8 +4,8 @@
     ? document.addEventListener('DOMContentLoaded', fn, { once: true }) : fn();
 
   ready(() => {
-    document.documentElement.dataset.techFx = 'v8.2-loaded';
-    console.info('[tech-fx] v8.2 optimized');
+    document.documentElement.dataset.techFx = 'v8.2.1-loaded';
+    console.info('[tech-fx] v8.2.1 optimized');
     const media = query => typeof matchMedia === 'function' && matchMedia(query).matches;
     const reduced = media('(prefers-reduced-motion: reduce)');
     const saveData = navigator.connection?.saveData === true;
@@ -22,8 +22,18 @@
     document.body.appendChild(hud);
 
 
-    // Tiny DOM-only boot indicator. It never blocks input and is removed after fading.
-    if (!reduced) {
+    // Show the boot indicator only once per browser tab/session.
+    // Reloading or navigating to another page in the same tab skips it.
+    let showBootLoader = !reduced;
+    try {
+      const bootKey = 'tech-boot-loader-shown-v1';
+      if (sessionStorage.getItem(bootKey)) showBootLoader = false;
+      else sessionStorage.setItem(bootKey, '1');
+    } catch (_) {
+      // If storage is unavailable, keep the normal first-load behavior.
+    }
+
+    if (showBootLoader) {
       const loader = document.createElement('div');
       loader.id = 'tech-loader';
       loader.setAttribute('aria-hidden', 'true');
@@ -45,6 +55,8 @@
       else addEventListener('load', finishLoading, { once: true });
       // Safety cap: slow third-party resources cannot keep the overlay forever.
       setTimeout(finishLoading, 900);
+    } else {
+      document.body.classList.add('tech-page-ready');
     }
 
 
