@@ -841,3 +841,7 @@ article.post::after {
   #tech-hud-frame .tech-circuit-node { display: none !important; animation: none !important; }
   a, button, .btn, .tag-plugin.button, .post-card { translate: none !important; }
 }
+
+
+/* v8.1: pointer-following cyan ring/reticle removed. */
+#tech-pointer-aura { display: none !important; }

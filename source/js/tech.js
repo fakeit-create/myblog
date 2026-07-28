@@ -4,8 +4,8 @@
     ? document.addEventListener('DOMContentLoaded', fn, { once: true }) : fn();
 
   ready(() => {
-    document.documentElement.dataset.techFx = 'v8-loaded';
-    console.info('[tech-fx] v8 loaded');
+    document.documentElement.dataset.techFx = 'v8.1-loaded';
+    console.info('[tech-fx] v8.1 loaded');
     const media = query => typeof matchMedia === 'function' && matchMedia(query).matches;
     const reduced = media('(prefers-reduced-motion: reduce)');
 
@@ -114,14 +114,10 @@
     });
 
 
-    // Desktop pointer aura: one element, one passive event, RAF only while catching up.
+    // Desktop pointer effects: keep only the sparse ion trail and click ripple.
+    // The cyan ring/reticle that followed the pointer has been removed.
     if (!reduced && media('(hover: hover) and (pointer: fine)')) {
-      const aura = document.createElement('div');
-      aura.id = 'tech-pointer-aura';
-      aura.setAttribute('aria-hidden', 'true');
-      document.body.appendChild(aura);
-      let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty, pointerRAF = 0;
-      let lastPX = tx, lastPY = ty, lastIonAt = 0;
+      let lastPX = innerWidth / 2, lastPY = innerHeight / 2, lastIonAt = 0;
       const ions = new Set();
       const emitIon = (px, py, dx, dy) => {
         const ion = document.createElement('i');
@@ -136,23 +132,14 @@
         setTimeout(remove, 520);
         if (ions.size > 14) { const oldest = ions.values().next().value; ions.delete(oldest); oldest.remove(); }
       };
-      const follow = () => {
-        x += (tx - x) * .58; y += (ty - y) * .58;
-        aura.style.transform = `translate3d(${x}px,${y}px,0)`;
-        if (Math.abs(tx - x) + Math.abs(ty - y) > .35) pointerRAF = requestAnimationFrame(follow);
-        else pointerRAF = 0;
-      };
       addEventListener('pointermove', event => {
-        tx = event.clientX; ty = event.clientY;
-        aura.classList.add('is-active');
-        const now = performance.now(), dx = tx - lastPX, dy = ty - lastPY;
+        const now = performance.now();
+        const dx = event.clientX - lastPX, dy = event.clientY - lastPY;
         if (now - lastIonAt > 38 && dx * dx + dy * dy > 80) {
-          emitIon(tx, ty, dx, dy); lastIonAt = now;
+          emitIon(event.clientX, event.clientY, dx, dy); lastIonAt = now;
         }
-        lastPX = tx; lastPY = ty;
-        if (!pointerRAF) pointerRAF = requestAnimationFrame(follow);
+        lastPX = event.clientX; lastPY = event.clientY;
       }, { passive: true });
-      document.documentElement.addEventListener('mouseleave', () => aura.classList.remove('is-active'), { passive: true });
 
       // A single short-lived ripple per primary click; animation is CSS-composited.
       addEventListener('pointerdown', event => {
