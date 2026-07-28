@@ -7,6 +7,25 @@
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
+    // Tiny DOM-only boot indicator. It never blocks input and is removed after fading.
+    if (!reduced) {
+      const loader = document.createElement('div');
+      loader.id = 'tech-loader';
+      loader.setAttribute('aria-hidden', 'true');
+      loader.innerHTML = '<span class="tech-loader-core"></span><span class="tech-loader-label">SYSTEM READY</span>';
+      document.body.appendChild(loader);
+      const finishLoading = () => setTimeout(() => {
+        loader.classList.add('is-done');
+        document.body.classList.add('tech-page-ready');
+        setTimeout(() => loader.remove(), 360);
+      }, 260);
+      if (document.readyState === 'complete') finishLoading();
+      else addEventListener('load', finishLoading, { once: true });
+      // Safety cap: a slow third-party resource must not keep the overlay around.
+      setTimeout(() => loader.isConnected && finishLoading(), 1600);
+    }
+
+
     // Correct the two legacy components with inline !important declarations.
     // This survives article-local <style> blocks, theme source order and PJAX-like swaps.
     const forceReadableLegacyUI = (root = document) => {
@@ -75,6 +94,40 @@
       element.classList.add('cyber-visible');
       element.style.removeProperty('transition-delay');
     });
+
+
+    // Desktop pointer aura: one element, one passive event, RAF only while catching up.
+    if (!reduced && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const aura = document.createElement('div');
+      aura.id = 'tech-pointer-aura';
+      aura.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(aura);
+      let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty, pointerRAF = 0;
+      const follow = () => {
+        x += (tx - x) * .24; y += (ty - y) * .24;
+        aura.style.transform = `translate3d(${x}px,${y}px,0)`;
+        if (Math.abs(tx - x) + Math.abs(ty - y) > .35) pointerRAF = requestAnimationFrame(follow);
+        else pointerRAF = 0;
+      };
+      addEventListener('pointermove', event => {
+        tx = event.clientX; ty = event.clientY;
+        aura.classList.add('is-active');
+        if (!pointerRAF) pointerRAF = requestAnimationFrame(follow);
+      }, { passive: true });
+      document.documentElement.addEventListener('mouseleave', () => aura.classList.remove('is-active'), { passive: true });
+
+      // A single short-lived ripple per primary click; animation is CSS-composited.
+      addEventListener('pointerdown', event => {
+        if (event.button !== 0) return;
+        const ripple = document.createElement('i');
+        ripple.className = 'tech-click-ripple';
+        ripple.setAttribute('aria-hidden', 'true');
+        ripple.style.left = `${event.clientX}px`;
+        ripple.style.top = `${event.clientY}px`;
+        document.body.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+      }, { passive: true });
+    }
 
     // Native canvas particles: no dependency, capped DPR/count, 30 FPS and paused off-tab.
     if (reduced) return;
