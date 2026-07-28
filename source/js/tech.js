@@ -4,7 +4,10 @@
     ? document.addEventListener('DOMContentLoaded', fn, { once: true }) : fn();
 
   ready(() => {
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.documentElement.dataset.techFx = 'v6-loaded';
+    console.info('[tech-fx] v6 loaded');
+    const media = query => typeof matchMedia === 'function' && matchMedia(query).matches;
+    const reduced = media('(prefers-reduced-motion: reduce)');
 
 
     // Tiny DOM-only boot indicator. It never blocks input and is removed after fading.
@@ -14,15 +17,22 @@
       loader.setAttribute('aria-hidden', 'true');
       loader.innerHTML = '<span class="tech-loader-core"></span><span class="tech-loader-label">SYSTEM READY</span>';
       document.body.appendChild(loader);
-      const finishLoading = () => setTimeout(() => {
-        loader.classList.add('is-done');
-        document.body.classList.add('tech-page-ready');
-        setTimeout(() => loader.remove(), 360);
-      }, 260);
+      let finishing = false;
+      const shownAt = performance.now();
+      const finishLoading = () => {
+        if (finishing) return;
+        finishing = true;
+        const wait = Math.max(0, 950 - (performance.now() - shownAt));
+        setTimeout(() => {
+          loader.classList.add('is-done');
+          document.body.classList.add('tech-page-ready');
+          setTimeout(() => loader.remove(), 460);
+        }, wait);
+      };
       if (document.readyState === 'complete') finishLoading();
       else addEventListener('load', finishLoading, { once: true });
-      // Safety cap: a slow third-party resource must not keep the overlay around.
-      setTimeout(() => loader.isConnected && finishLoading(), 1600);
+      // Safety cap: slow third-party resources cannot keep the overlay forever.
+      setTimeout(finishLoading, 1800);
     }
 
 
@@ -97,7 +107,7 @@
 
 
     // Desktop pointer aura: one element, one passive event, RAF only while catching up.
-    if (!reduced && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    if (!reduced && media('(hover: hover) and (pointer: fine)')) {
       const aura = document.createElement('div');
       aura.id = 'tech-pointer-aura';
       aura.setAttribute('aria-hidden', 'true');
@@ -139,18 +149,18 @@
     if (!ctx) return;
 
     let width = 0, height = 0, dpr = 1, particles = [], raf = 0, last = 0;
-    const mobile = matchMedia('(max-width: 768px)');
+    const mobile = typeof matchMedia === 'function' ? matchMedia('(max-width: 768px)') : { matches: innerWidth <= 768 };
     const makeParticle = () => ({
       x: Math.random() * width, y: Math.random() * height,
       vx: (Math.random() - .5) * .14, vy: (Math.random() - .5) * .14 - .035,
-      r: Math.random() * 1.05 + .45, a: Math.random() * .38 + .20
+      r: Math.random() * 1.45 + .65, a: Math.random() * .40 + .38
     });
     const resize = () => {
       width = innerWidth; height = innerHeight; dpr = Math.min(devicePixelRatio || 1, 1.5);
       canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`; canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.min(mobile.matches ? 24 : 46, Math.max(16, Math.round(width * height / 30000)));
+      const count = Math.min(mobile.matches ? 30 : 64, Math.max(24, Math.round(width * height / 22000)));
       particles = Array.from({ length: count }, makeParticle);
     };
     const draw = time => {
@@ -163,7 +173,7 @@
         if (p.x < -5) p.x = width + 5; else if (p.x > width + 5) p.x = -5;
         if (p.y < -5) p.y = height + 5; else if (p.y > height + 5) p.y = -5;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(91, 205, 255, ${p.a})`; ctx.fill();
+        ctx.fillStyle = `rgba(116, 222, 255, ${p.a})`; ctx.fill();
       }
       // Only nearby neighbors, and only every other particle, to keep comparisons low.
       ctx.lineWidth = .55;
@@ -173,7 +183,7 @@
           const b = particles[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx*dx + dy*dy;
           if (d2 < 8500) {
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(85, 172, 220, ${.08 * (1 - d2 / 8500)})`; ctx.stroke();
+            ctx.strokeStyle = `rgba(85, 172, 220, ${.18 * (1 - d2 / 8500)})`; ctx.stroke();
           }
         }
       }
