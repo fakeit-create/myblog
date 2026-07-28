@@ -4,10 +4,17 @@
     ? document.addEventListener('DOMContentLoaded', fn, { once: true }) : fn();
 
   ready(() => {
-    document.documentElement.dataset.techFx = 'v6-loaded';
-    console.info('[tech-fx] v6 loaded');
+    document.documentElement.dataset.techFx = 'v7-loaded';
+    console.info('[tech-fx] v7 loaded');
     const media = query => typeof matchMedia === 'function' && matchMedia(query).matches;
     const reduced = media('(prefers-reduced-motion: reduce)');
+
+
+    // Minimal viewport HUD; decorative and non-interactive.
+    const hud = document.createElement('div');
+    hud.id = 'tech-hud-frame';
+    hud.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(hud);
 
 
     // Tiny DOM-only boot indicator. It never blocks input and is removed after fading.
@@ -113,8 +120,23 @@
       aura.setAttribute('aria-hidden', 'true');
       document.body.appendChild(aura);
       let tx = innerWidth / 2, ty = innerHeight / 2, x = tx, y = ty, pointerRAF = 0;
+      let lastPX = tx, lastPY = ty, lastIonAt = 0;
+      const ions = new Set();
+      const emitIon = (px, py, dx, dy) => {
+        const ion = document.createElement('i');
+        ion.className = 'tech-cursor-ion';
+        ion.setAttribute('aria-hidden', 'true');
+        ion.style.left = `${px}px`; ion.style.top = `${py}px`;
+        ion.style.setProperty('--ion-x', `${-dx * .10 + (Math.random() - .5) * 5}px`);
+        ion.style.setProperty('--ion-y', `${-dy * .10 + (Math.random() - .5) * 5}px`);
+        document.body.appendChild(ion); ions.add(ion);
+        const remove = () => { ions.delete(ion); ion.remove(); };
+        ion.addEventListener('animationend', remove, { once: true });
+        setTimeout(remove, 520);
+        if (ions.size > 14) { const oldest = ions.values().next().value; ions.delete(oldest); oldest.remove(); }
+      };
       const follow = () => {
-        x += (tx - x) * .24; y += (ty - y) * .24;
+        x += (tx - x) * .58; y += (ty - y) * .58;
         aura.style.transform = `translate3d(${x}px,${y}px,0)`;
         if (Math.abs(tx - x) + Math.abs(ty - y) > .35) pointerRAF = requestAnimationFrame(follow);
         else pointerRAF = 0;
@@ -122,6 +144,11 @@
       addEventListener('pointermove', event => {
         tx = event.clientX; ty = event.clientY;
         aura.classList.add('is-active');
+        const now = performance.now(), dx = tx - lastPX, dy = ty - lastPY;
+        if (now - lastIonAt > 38 && dx * dx + dy * dy > 80) {
+          emitIon(tx, ty, dx, dy); lastIonAt = now;
+        }
+        lastPX = tx; lastPY = ty;
         if (!pointerRAF) pointerRAF = requestAnimationFrame(follow);
       }, { passive: true });
       document.documentElement.addEventListener('mouseleave', () => aura.classList.remove('is-active'), { passive: true });
