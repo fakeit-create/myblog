@@ -52,6 +52,7 @@ menubar:
       icon: solar:notebook-bookmark-bold-duotone
       title: 408笔记
       url: /wiki/docs/
+      
     - id: explore
       theme: '#FA6400'
       icon: solar:planet-bold-duotone
