@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const TARGET=new Date(2026,11,19,8,30,0),KEY='k408:countdown:hidden';
+const TARGET=new Date(2026,11,19,8,30,0),KEY='k408:countdown:hidden',POS_KEY='k408:countdown:position';
 const $=(s,r=document)=>r.querySelector(s);
 function build(){
   if($('#k408-fixed-countdown'))return;
@@ -17,16 +17,69 @@ function build(){
     </div>`;
   document.body.append(root);
   const button=$('.k408-count-toggle',root);
+  const clampPosition=(x,y)=>({
+    x:Math.max(8,Math.min(x,window.innerWidth-60)),
+    y:Math.max(8,Math.min(y,window.innerHeight-48))
+  });
+  const placeCollapsed=position=>{
+    if(!position)return;
+    const p=clampPosition(Number(position.x)||8,Number(position.y)||8);
+    root.style.left=p.x+'px';root.style.top=p.y+'px';
+    root.style.right='auto';root.style.bottom='auto';
+  };
+  const restorePosition=()=>{
+    try{const saved=JSON.parse(localStorage.getItem(POS_KEY));if(saved)placeCollapsed(saved)}catch{}
+  };
+  const resetPosition=()=>{
+    root.style.removeProperty('left');root.style.removeProperty('top');
+    root.style.removeProperty('right');root.style.removeProperty('bottom');
+  };
   const setHidden=hidden=>{
     root.classList.toggle('is-hidden',hidden);
     button.textContent=hidden?'408':'−';
-    button.title=hidden?'显示 408 倒计时':'隐藏倒计时';
+    button.title=hidden?'拖动可移动，点击显示倒计时':'隐藏倒计时';
     button.setAttribute('aria-expanded',String(!hidden));
+    if(hidden)restorePosition();else resetPosition();
     try{localStorage.setItem(KEY,hidden?'1':'0')}catch{}
   };
   let hidden=false;try{hidden=localStorage.getItem(KEY)==='1'}catch{}
   setHidden(hidden);
-  button.addEventListener('click',()=>setHidden(!root.classList.contains('is-hidden')));
+
+  let drag=null,suppressClick=false;
+  button.addEventListener('pointerdown',event=>{
+    if(!root.classList.contains('is-hidden')||event.button!==0)return;
+    const rect=root.getBoundingClientRect();
+    drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,left:rect.left,top:rect.top,moved:false};
+    button.setPointerCapture(event.pointerId);
+  });
+  button.addEventListener('pointermove',event=>{
+    if(!drag||event.pointerId!==drag.id)return;
+    const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
+    if(!drag.moved&&Math.hypot(dx,dy)<4)return;
+    drag.moved=true;event.preventDefault();
+    placeCollapsed({x:drag.left+dx,y:drag.top+dy});
+  });
+  const finishDrag=event=>{
+    if(!drag||event.pointerId!==drag.id)return;
+    if(drag.moved){
+      const rect=root.getBoundingClientRect(),position=clampPosition(rect.left,rect.top);
+      placeCollapsed(position);suppressClick=true;
+      try{localStorage.setItem(POS_KEY,JSON.stringify(position))}catch{}
+    }
+    drag=null;
+  };
+  button.addEventListener('pointerup',finishDrag);
+  button.addEventListener('pointercancel',finishDrag);
+  button.addEventListener('click',()=>{
+    if(suppressClick){suppressClick=false;return}
+    setHidden(!root.classList.contains('is-hidden'));
+  });
+  window.addEventListener('resize',()=>{
+    if(!root.classList.contains('is-hidden'))return;
+    const rect=root.getBoundingClientRect(),position=clampPosition(rect.left,rect.top);
+    placeCollapsed(position);
+    try{localStorage.setItem(POS_KEY,JSON.stringify(position))}catch{}
+  });
   const draw=()=>{
     let seconds=Math.max(0,Math.floor((TARGET-Date.now())/1000));
     const values={days:Math.floor(seconds/86400),hours:Math.floor(seconds%86400/3600),mins:Math.floor(seconds%3600/60),secs:seconds%60};
