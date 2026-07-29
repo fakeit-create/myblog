@@ -83,11 +83,39 @@
     return state.article ? textNodes(state.article).map(node => node.nodeValue).join('') : '';
   }
 
+  // 使用与 articleText() 完全相同的文本节点计算偏移。
+  // 不能使用 Range.toString()：文章内的隐藏文本、公式辅助文本或脚本内容
+  // 可能被 Range 计入，却被 textNodes() 排除，进而使选中文字和弹窗文字错位。
+  function comparePoints(aContainer, aOffset, bContainer, bOffset) {
+    const a = document.createRange();
+    const b = document.createRange();
+    try {
+      a.setStart(aContainer, aOffset);
+      b.setStart(bContainer, bOffset);
+      a.collapse(true);
+      b.collapse(true);
+      return a.compareBoundaryPoints(Range.START_TO_START, b);
+    } catch (_) { return 0; }
+  }
+
   function boundaryOffset(container, offset) {
-    const range = document.createRange();
-    range.selectNodeContents(state.article);
-    try { range.setEnd(container, offset); } catch (_) { return -1; }
-    return range.toString().length;
+    if (!state.article) return -1;
+    let total = 0;
+    try {
+      for (const node of textNodes(state.article)) {
+        const length = node.nodeValue.length;
+        // 当前文本节点完全位于边界之前（或刚好结束于边界）。
+        if (comparePoints(node, length, container, offset) <= 0) {
+          total += length;
+          continue;
+        }
+        // 边界处于当前文本节点内部。
+        if (node === container) return total + Math.max(0, Math.min(offset, length));
+        // 当前节点开始于边界之后，之前累计值就是目标偏移。
+        if (comparePoints(node, 0, container, offset) >= 0) return total;
+      }
+      return total;
+    } catch (_) { return -1; }
   }
 
   function captureSelection() {
