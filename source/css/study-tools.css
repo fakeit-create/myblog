@@ -48,3 +48,6 @@ body.feng-focus-mode .l_main { width:min(900px,calc(100% - 28px))!important;max-
 body.feng-focus-mode #tech-particles { opacity:.18!important; }
 @media(max-width:768px){#feng-open{left:10px;bottom:12px;width:44px;padding:0;justify-content:center}#feng-open kbd{display:none}#feng-focus{left:61px;bottom:12px}#feng-status{right:9px;bottom:12px;min-width:112px;padding:8px 9px}.feng-overlay{padding:8vh 8px 12px}.feng-command-card{max-height:84vh}.feng-item em,.feng-command-card footer span:not(:last-child){display:none}#feng-select button{padding:8px}.feng-command-card footer span:last-child{margin:auto}#feng-resume{bottom:67px}}
 @media(prefers-reduced-motion:reduce){#feng-toast{transition:none}.feng-backdrop{backdrop-filter:none}}
+
+/* v1.0.2: 统一划词入口。旧批注组件仍负责保存标记，但不再显示重复的“添加标记”浮条。 */
+#k408-selection-button { display:none !important; }
