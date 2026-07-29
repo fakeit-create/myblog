@@ -924,3 +924,14 @@ body::before { animation: none !important; }
 :root[data-theme="light"] figure.highlight,:root[data-theme="light"] .highlight,:root[data-theme="light"] pre:not([class]):has(> code) { color:#233b4d!important;background:#eef4f7!important;border-color:#c8d9e3!important; }
 :root[data-theme="light"] figure.highlight::before { color:#347e96;background:#e1ebf0;border-color:#c8d9e3; }
 :root[data-theme="light"] ::-webkit-scrollbar-track { background:#eaf1f5; }:root[data-theme="light"] ::-webkit-scrollbar-thumb { border-color:#eaf1f5;background:#91aeba; }
+
+
+/* v8.3 runtime performance safeguards. */
+#tech-hud-frame,#tech-particles,.tech-click-ripple{pointer-events:none}
+#tech-hud-frame{contain:layout paint style}
+.post-list .post-card{content-visibility:auto;contain-intrinsic-size:auto 280px}
+.tech-low-power body{background-attachment:scroll!important}
+.tech-low-power .k408-fixed-countdown,
+.tech-low-power .feng-backdrop,
+.tech-low-power .k408-dialog-backdrop{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+@media(max-width:768px){.post-list .post-card{contain-intrinsic-size:auto 240px}}

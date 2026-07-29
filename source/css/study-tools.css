@@ -51,3 +51,7 @@ body.feng-focus-mode #tech-particles { opacity:.18!important; }
 
 /* v1.0.2: 统一划词入口。旧批注组件仍负责保存标记，但不再显示重复的“添加标记”浮条。 */
 #k408-selection-button { display:none !important; }
+
+/* Performance: isolate overlays and skip off-screen search rows. */
+.feng-command-card,.feng-pomo-card{contain:layout paint}
+.feng-item{content-visibility:auto;contain-intrinsic-size:auto 58px}

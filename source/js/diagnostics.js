@@ -1,4 +1,4 @@
-(()=>{'use strict';const $=(s,r=document)=>r.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+(()=>{'use strict';if(!document.getElementById('k408-checks'))return;const $=(s,r=document)=>r.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let resourceErrors=[];addEventListener('error',e=>{let x=e.target;if(x&&x!==window&&x.src||x?.href)resourceErrors.push(x.src||x.href)},true);
 async function run(){let box=$('#k408-checks');if(!box)return;box.innerHTML='<div class="k408-check"><i class="k408-dot"></i><b>正在诊断</b><span>请稍候…</span></div>';let a=[],add=(name,status,detail)=>a.push({name,status,detail});
 add('JavaScript 执行','ok','诊断脚本已正常运行');add('HTTPS',location.protocol==='https:'||location.hostname==='localhost'?'ok':'warn',location.protocol==='https:'?'当前连接使用 HTTPS':'当前不是 HTTPS 连接');

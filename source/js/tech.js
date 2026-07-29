@@ -4,8 +4,8 @@
     ? document.addEventListener('DOMContentLoaded', fn, { once: true }) : fn();
 
   ready(() => {
-    document.documentElement.dataset.techFx = 'v8.2.1-loaded';
-    console.info('[tech-fx] v8.2.1 optimized');
+    document.documentElement.dataset.techFx = 'v8.3.0-loaded';
+    console.info('[tech-fx] v8.3.0 optimized');
     const media = query => typeof matchMedia === 'function' && matchMedia(query).matches;
     const reduced = media('(prefers-reduced-motion: reduce)');
     const saveData = navigator.connection?.saveData === true;
@@ -103,8 +103,12 @@
     let repairQueued = false;
     const repairRoots = new Set();
     const repairObserver = new MutationObserver(records => {
+      const relevant = '.k408-user,.k408-extra,.k408-warn,.k408-source,.navbar-blur,.navbar-container,.navbar nav,.navbar nav a';
       for (const record of records) for (const node of record.addedNodes) {
-        if (node.nodeType === 1 && !node.matches?.('#tech-loader,.tech-click-ripple,#tech-hud-frame,#tech-particles')) repairRoots.add(node);
+        if (node.nodeType !== 1 || node.matches?.('#tech-loader,.tech-click-ripple,#tech-hud-frame,#tech-particles,#feng-study-tools,.k408-annotation-ui')) continue;
+        // Ignore unrelated UI/animation insertions. Only repair nodes that can
+        // actually contain legacy callouts or Stellar's replaced navbar.
+        if (node.matches?.(relevant) || node.querySelector?.(relevant)) repairRoots.add(node);
       }
       if (repairRoots.size && !repairQueued) {
         repairQueued = true;
@@ -165,19 +169,30 @@
     // Rare title RGB fault: brief, infrequent and never hides the real title.
     if (!reduced) {
       const titleSelectors = '.md-text h1,.article-title,h1.post-title,.post-title';
-      const pulseTitle = () => {
-        const titles = [...document.querySelectorAll(titleSelectors)].filter(el => el.textContent.trim());
-        if (titles.length) {
-          const title = titles[Math.floor(Math.random() * titles.length)];
-          title.dataset.techTitle = title.textContent.trim();
-          title.classList.remove('tech-title-glitch');
-          void title.offsetWidth;
-          title.classList.add('tech-title-glitch');
-          setTimeout(() => title.classList.remove('tech-title-glitch'), 390);
-        }
-        setTimeout(pulseTitle, 7000 + Math.random() * 6000);
+      let titleTimer = 0;
+      const scheduleTitle = delay => {
+        clearTimeout(titleTimer);
+        titleTimer = setTimeout(pulseTitle, delay);
       };
-      setTimeout(pulseTitle, 3500 + Math.random() * 2500);
+      const pulseTitle = () => {
+        if (!document.hidden) {
+          const titles = [...document.querySelectorAll(titleSelectors)].filter(el => el.textContent.trim());
+          if (titles.length) {
+            const title = titles[Math.floor(Math.random() * titles.length)];
+            title.dataset.techTitle = title.textContent.trim();
+            title.classList.remove('tech-title-glitch');
+            void title.offsetWidth;
+            title.classList.add('tech-title-glitch');
+            setTimeout(() => title.classList.remove('tech-title-glitch'), 390);
+          }
+        }
+        scheduleTitle(7000 + Math.random() * 6000);
+      };
+      scheduleTitle(3500 + Math.random() * 2500);
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) clearTimeout(titleTimer);
+        else scheduleTitle(1800 + Math.random() * 1800);
+      });
     }
 
     // Magnetic pointer tracking removed to avoid forced layout on pointermove.

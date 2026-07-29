@@ -62,3 +62,6 @@ body.k408-dialog-open { overflow: hidden; }
   .k408-dialog-card { padding: 15px; }.k408-dialog-actions button { padding: 8px 11px; }
 }
 @media (prefers-reduced-motion:reduce) { #k408-annotation-panel,#k408-annotation-toast { transition:none; } }
+
+/* Performance: skip painting off-screen annotation rows. */
+.k408-list-item{content-visibility:auto;contain-intrinsic-size:auto 76px}

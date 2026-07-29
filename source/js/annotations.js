@@ -11,6 +11,7 @@
   };
 
   const state = { article: null, selected: null, editingId: null, marks: [] };
+  let storeCache = null;
   const $ = (selector, root = document) => root.querySelector(selector);
 
   // 标记只按文章路径归档，不绑定协议、域名或本地预览端口。
@@ -41,10 +42,11 @@
   }
 
   function loadAll() {
+    if (storeCache) return storeCache;
     try {
       const data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
-      return normalizeStore(data);
-    } catch (_) { return {}; }
+      return (storeCache = normalizeStore(data));
+    } catch (_) { return (storeCache = {}); }
   }
 
   function savePage(marks) {
@@ -52,6 +54,7 @@
       const all = loadAll();
       all[pageKey()] = marks;
       localStorage.setItem(STORE_KEY, JSON.stringify(all));
+      storeCache = all;
       return true;
     } catch (_) {
       toast('保存失败：浏览器存储空间不可用');
@@ -422,6 +425,7 @@
         current[key] = [...map.values()];
       }
       localStorage.setItem(STORE_KEY, JSON.stringify(current));
+      storeCache = current;
       renderMarks();
       const count = pageMarks().length;
       toast(count ? `导入成功，本页找到 ${count} 条标记` : '导入成功，但备份中没有当前文章的标记');
@@ -505,11 +509,20 @@
   function init() {
     bindArticle();
     let scheduled = false;
-    new MutationObserver(() => {
-      if (scheduled) return;
+    new MutationObserver(records => {
+      // UI updates and visual effects also mutate <body>; only react when an
+      // article-like subtree is inserted or the current article is detached.
+      const changed = !state.article?.isConnected || records.some(record =>
+        [...record.addedNodes].some(node => node.nodeType === 1 &&
+          (node.matches?.(ARTICLE_SELECTOR) || node.querySelector?.(ARTICLE_SELECTOR)))
+      );
+      if (!changed || scheduled) return;
       scheduled = true;
       requestAnimationFrame(() => { scheduled = false; bindArticle(); });
     }).observe(document.body, { childList: true, subtree: true });
+    addEventListener('storage', event => {
+      if (event.key === STORE_KEY) { storeCache = null; renderMarks(); }
+    });
     addEventListener('popstate', () => setTimeout(bindArticle, 50));
   }
 
