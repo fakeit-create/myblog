@@ -32,7 +32,11 @@ function build(){
     // 保存的是收缩按钮的左上角。按钮位于屏幕右半侧时，展开面板向左伸展，
     // 避免仍从原坐标向右展开而超出屏幕。
     if(!root.classList.contains('is-hidden')&&x+26>window.innerWidth/2){
-      targetX=x+52-root.offsetWidth;
+      // width 正在做 CSS 过渡时，offsetWidth 仍可能是收缩后的 52px；
+      // 直接读取目标展开宽度，确保第一次点击就向左展开。
+      const cssWidth=parseFloat(getComputedStyle(root).getPropertyValue('--k-expanded-width'));
+      const expandedWidth=Number.isFinite(cssWidth)&&cssWidth>52?cssWidth:278;
+      targetX=x+52-expandedWidth;
     }
     const p=clampPosition(targetX,y);
     root.style.left=p.x+'px';root.style.top=p.y+'px';
