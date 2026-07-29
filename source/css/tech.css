@@ -884,3 +884,43 @@ body::before { animation: none !important; }
   .md-text .tag-plugin.note::after,
   .md-text div:is(.k408-user,.k408-extra,.k408-warn,.k408-source)::after { display: none !important; }
 }
+
+
+/* v8.2.2: real automatic/light theme support for study-tools theme switcher. */
+:root[data-theme="light"] {
+  color-scheme: light !important;
+  --background:#edf4f8 !important;--card:#ffffff !important;--block:#f4f8fb !important;
+  --block-border:#c8d9e3 !important;--theme-block:#f4f8fb !important;--theme-border:#c8d9e3 !important;
+  --theme-codeblock:#eef4f7 !important;--text:#14283b !important;--text-p0:#102334 !important;
+  --text-p1:#20384b !important;--text-p2:#40586a !important;--text-p3:#607789 !important;
+  --text-p4:#788d9c !important;--text-meta:#607789 !important;--text-code:#096c89 !important;
+  --link:#087fa8 !important;--bg-a100:#edf4f8 !important;
+}
+:root[data-theme="light"],:root[data-theme="light"] body { background:#edf4f8 !important; }
+:root[data-theme="light"] body { color:#20384b !important;background-image:radial-gradient(circle at 10% 5%,rgba(31,153,200,.09),transparent 30rem),radial-gradient(circle at 88% 10%,rgba(104,92,190,.06),transparent 30rem)!important; }
+:root[data-theme="light"] body::before { opacity:.16; }
+:root[data-theme="light"] .l_left .sidebg { background:rgba(237,244,248,.96)!important; }
+:root[data-theme="light"] .l_left .leftbar-container,
+:root[data-theme="light"] .post-list .post-card,
+:root[data-theme="light"] .navbar-blur { color:#20384b!important;background:#fff!important;border-color:#c8d9e3!important;box-shadow:0 10px 28px rgba(31,68,89,.10)!important; }
+:root[data-theme="light"] .logo-wrap .title,:root[data-theme="light"] .logo-wrap .title a,
+:root[data-theme="light"] .post-list .post-title,:root[data-theme="light"] .md-text h1,:root[data-theme="light"] .md-text h2,
+:root[data-theme="light"] .md-text h3,:root[data-theme="light"] .md-text h4,:root[data-theme="light"] .md-text h5,:root[data-theme="light"] .md-text h6 { color:#102334!important; }
+:root[data-theme="light"] .logo-wrap .subtitle,:root[data-theme="light"] .post-list .post-card .meta,
+:root[data-theme="light"] .post-list .post-card .excerpt,:root[data-theme="light"] .widget-wrapper .widget-body,
+:root[data-theme="light"] .widget-wrapper .widget-body a,:root[data-theme="light"] .widget-wrapper .widget-body span { color:#50697a!important; }
+:root[data-theme="light"] .nav-area .menu .nav-item { color:#294357!important;background:#f5f9fb!important;border-color:#c8d9e3!important; }
+:root[data-theme="light"] .nav-area .menu .nav-item:hover,:root[data-theme="light"] .nav-area .menu .nav-item.active { color:#102334!important;background:#e4f3f8!important; }
+:root[data-theme="light"] .navbar nav a,:root[data-theme="light"] .navbar nav a:link,:root[data-theme="light"] .navbar nav a:visited { color:#294357!important; }
+:root[data-theme="light"] .navbar nav a.active,:root[data-theme="light"] .navbar nav a:hover { color:#102334!important;background:#e3f1f7!important; }
+:root[data-theme="light"] .md-text,:root[data-theme="light"] .md-text p,:root[data-theme="light"] .md-text li,
+:root[data-theme="light"] .md-text dd,:root[data-theme="light"] .md-text dt,:root[data-theme="light"] .md-text summary,
+:root[data-theme="light"] .md-text figcaption,:root[data-theme="light"] .md-text label,:root[data-theme="light"] .md-text table,
+:root[data-theme="light"] .md-text td,:root[data-theme="light"] .md-text th { color:#263f52!important; }
+:root[data-theme="light"] .md-text strong,:root[data-theme="light"] .md-text b { color:#102334!important; }
+:root[data-theme="light"] .md-text a:not(.tag-plugin):not(.headerlink) { color:#087fa8!important; }
+:root[data-theme="light"] .md-text code:not(pre code) { color:#096c89!important;background:#e5f1f5!important;border-color:#bfd6e0!important; }
+:root[data-theme="light"] .md-text blockquote { color:#294357!important;background:#edf7fa!important;border-color:#3c9fc0!important; }
+:root[data-theme="light"] figure.highlight,:root[data-theme="light"] .highlight,:root[data-theme="light"] pre:not([class]):has(> code) { color:#233b4d!important;background:#eef4f7!important;border-color:#c8d9e3!important; }
+:root[data-theme="light"] figure.highlight::before { color:#347e96;background:#e1ebf0;border-color:#c8d9e3; }
+:root[data-theme="light"] ::-webkit-scrollbar-track { background:#eaf1f5; }:root[data-theme="light"] ::-webkit-scrollbar-thumb { border-color:#eaf1f5;background:#91aeba; }

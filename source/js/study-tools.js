@@ -1,0 +1,64 @@
+(() => {
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const A='article.md-text, .md-text', POS='feng-reading-v1', THEME='feng-theme-v1', TIMER='feng-timer-v1';
+const state={data:null,sel:'',range:null,article:null,resume:null,mode:'auto',tick:0};
+const get=(k,d=null)=>{try{return localStorage.getItem(k)??d}catch{return d}}, set=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+const key=()=>location.pathname.replace(/\/index\.html?$/i,'/').replace(/\/+$/,'')||'/';
+const text=h=>{let d=document.createElement('div');d.innerHTML=h||'';return(d.textContent||'').replace(/\s+/g,' ').trim()};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const edit=t=>t?.closest?.('input,textarea,select,[contenteditable=true]');
+let toastTimer,searchTimer,posTimer;
+function toast(s){let e=$('#feng-toast');if(!e)return;e.textContent=s;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.remove('show'),2200)}
+function build(){if($('#feng-command'))return;let e=document.createElement('div');e.id='feng-study-tools';e.innerHTML=`
+<button id="feng-open" class="feng-fab" title="命令面板 (Ctrl+K)">⌕<kbd>Ctrl K</kbd></button><button id="feng-focus" class="feng-fab icon" title="专注阅读">◫</button>
+<div id="feng-status"><i></i><span>SYSTEM ONLINE</span><small>LOCAL READY</small></div>
+<div id="feng-select" role="toolbar" hidden><button data-sa="mark">✦ 标记</button><button data-sa="copy">复制</button><button data-sa="search">站内搜索</button></div>
+<div id="feng-command" class="feng-overlay" hidden><div class="feng-backdrop" data-close="command"></div><section class="feng-command-card"><header><b>⌕</b><input id="feng-query" type="search" placeholder="搜索文章或输入命令…" autocomplete="off"><kbd>ESC</kbd></header><main id="feng-results"></main><footer><span>↑ ↓ 选择</span><span>Enter 执行</span><span>FENG // COMMAND</span></footer></section></div>
+<div id="feng-pomo" class="feng-overlay" hidden><div class="feng-backdrop" data-close="pomo"></div><section class="feng-pomo-card"><header><div><b>408 番茄钟</b><small id="feng-phase">专注学习</small></div><button data-close="pomo">×</button></header><div id="feng-time">25:00</div><div class="presets"><button data-min="25">专注 25</button><button data-min="5">休息 5</button></div><div class="actions"><button data-pomo="reset">重置</button><button class="primary" data-pomo="toggle">开始</button></div></section></div>
+<div id="feng-resume" hidden><div><b>继续上次阅读？</b><span>上次读到 <strong>0%</strong></span></div><button data-resume="yes">继续</button><button data-resume="no">×</button></div><div id="feng-toast"></div>`;document.body.append(e);bind()}
+function sys(){return matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'}
+function theme(mode,notice=false){if(!['auto','light','dark'].includes(mode))mode='auto';state.mode=mode;set(THEME,mode);const resolved=mode==='auto'?sys():mode;document.documentElement.setAttribute('data-theme',resolved);document.documentElement.dataset.themeMode=mode;document.documentElement.style.colorScheme=resolved;if(window.utils?.dark){utils.dark.mode=resolved;utils.dark.method?.toggle?.start?.()}status();if(notice)toast('主题：'+({auto:'跟随系统',light:'浅色',dark:'深色'}[mode]))}
+function cycleTheme(){let a=['auto','light','dark'];theme(a[(a.indexOf(state.mode)+1)%3],true)}
+matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>state.mode==='auto'&&theme('auto'));
+function commands(){return[
+{icon:'⌕',title:'站内快捷搜索',sub:'搜索标题和正文',keys:'search 搜索',run:()=>open('')},
+{icon:'◫',title:document.body.classList.contains('feng-focus-mode')?'退出专注阅读':'进入专注阅读',sub:'隐藏侧栏和干扰元素',keys:'focus 专注',run:focus},
+{icon:'◐',title:'切换主题（'+({auto:'自动',light:'浅色',dark:'深色'}[state.mode])+ '）',sub:'自动 → 浅色 → 深色',keys:'theme 主题 深色 浅色',run:cycleTheme},
+{icon:'◷',title:'打开 408 番茄钟',sub:'25 分钟专注 / 5 分钟休息',keys:'timer pomodoro 番茄钟',run:openPomo},
+{icon:'↟',title:'返回顶部',sub:'滚动到页面顶部',keys:'top 顶部',run:()=>scrollTo({top:0,behavior:'smooth'})},
+...(state.resume?[{icon:'↪',title:'回到上次阅读位置',sub:state.resume.percent+'%',keys:'resume 继续',run:resume}]:[])]}
+async function load(){if(state.data)return state.data;try{let r=await fetch('/search.json');if(!r.ok)throw 0;let j=await r.json(),a=Array.isArray(j)?j:(j.posts||j.pages||[]);return state.data=a.map(x=>({title:text(x.title)||'未命名页面',url:x.url||x.path||'/',content:text(x.content||x.description)}))}catch{return state.data=[]}}
+function excerpt(x,q){let c=x.content.toLowerCase(),at=Math.max(0,...q.map(w=>c.indexOf(w)).filter(i=>i>=0)),st=Math.max(0,at-35);return(st?'…':'')+x.content.slice(st,st+115)+(st+115<x.content.length?'…':'')}
+async function render(q=''){let out=$('#feng-results'),words=q.trim().toLowerCase().split(/\s+/).filter(Boolean),cmd=commands().filter(x=>!words.length||words.every(w=>(x.title+x.keys).toLowerCase().includes(w))),hits=[];if(words.length){out.innerHTML='<div class="loading">正在检索站内内容…</div>';hits=(await load()).map(x=>{let t=x.title.toLowerCase(),c=x.content.toLowerCase(),ok=words.every(w=>t.includes(w)||c.includes(w)),score=words.reduce((n,w)=>n+(t.includes(w)?8:0)+(c.includes(w)?2:0),0);return{x,ok,score}}).filter(v=>v.ok).sort((a,b)=>b.score-a.score).slice(0,12)}let h=[];if(cmd.length){h.push('<label>快捷命令</label>');cmd.forEach((x,i)=>h.push(`<button class="feng-item" data-c="${i}"><i>${x.icon}</i><span><b>${esc(x.title)}</b><small>${esc(x.sub)}</small></span><em>执行</em></button>`))}if(words.length){h.push(`<label>站内结果 <small>${hits.length}</small></label>`);hits.forEach(v=>h.push(`<a class="feng-item" href="${esc(v.x.url)}"><i>↗</i><span><b>${esc(v.x.title)}</b><small>${esc(excerpt(v.x,words))}</small></span><em>打开</em></a>`))}if(!h.length)h.push(`<div class="empty"><b>没有找到相关内容</b><span>${state.data?.length===0?'搜索索引暂不可用，请先重新生成网站。':'换一个关键词试试。'}</span></div>`);out.innerHTML=h.join('');out._cmd=cmd;out._at=-1}
+function open(q=''){let o=$('#feng-command'),i=$('#feng-query');o.hidden=false;document.body.classList.add('feng-modal-open');i.value=q;render(q);requestAnimationFrame(()=>i.focus())}
+function close(){ $('#feng-command').hidden=true;document.body.classList.remove('feng-modal-open')}
+function move(n){let out=$('#feng-results'),a=$$('.feng-item',out);if(!a.length)return;out._at=(out._at+n+a.length)%a.length;a.forEach((x,i)=>x.classList.toggle('active',i===out._at));a[out._at].scrollIntoView({block:'nearest'})}
+function run(el){if(!el)return;if(el.dataset.c!=null){let x=$('#feng-results')._cmd[+el.dataset.c];close();x?.run()}else if(el.href)location.href=el.href}
+function focus(force){let on=typeof force==='boolean'?force:!document.body.classList.contains('feng-focus-mode');document.body.classList.toggle('feng-focus-mode',on);$('#feng-focus').classList.toggle('active',on);toast(on?'已进入专注阅读，按 Esc 退出':'已退出专注阅读');status()}
+function savePos(){if(!state.article||document.body.classList.contains('feng-modal-open'))return;let doc=document.documentElement,max=doc.scrollHeight-innerHeight;if(max<500)return;let all={};try{all=JSON.parse(get(POS,'{}'))}catch{}all[key()]={y:Math.round(scrollY),percent:Math.round(scrollY/max*100),height:doc.scrollHeight,time:Date.now()};set(POS,JSON.stringify(all))}
+function checkPos(){state.article=$(A);if(!state.article)return;let all={};try{all=JSON.parse(get(POS,'{}'))}catch{}let x=all[key()];if(!x||x.y<250||x.percent>96||Date.now()-x.time>2592e6)return;state.resume=x;let e=$('#feng-resume');$('strong',e).textContent=x.percent+'%';e.hidden=false;setTimeout(()=>e.hidden=true,12000)}
+function resume(){if(!state.resume)return;let ratio=state.resume.y/Math.max(1,state.resume.height-innerHeight),max=document.documentElement.scrollHeight-innerHeight,y=Math.min(max,Math.max(state.resume.y,ratio*max));scrollTo({top:y,behavior:'smooth'});$('#feng-resume').hidden=true;toast('已回到上次阅读位置')}
+function timer(){let d;try{d=JSON.parse(get(TIMER,''))}catch{}if(!d||!d.total)d={total:1500,left:1500,running:false,end:0,phase:'focus'};if(d.running)d.left=Math.max(0,Math.ceil((d.end-Date.now())/1000));return d}
+function saveTimer(d){set(TIMER,JSON.stringify(d))}
+function drawTimer(){let d=timer();if(d.running&&d.left<=0){d.running=false;d.left=d.phase==='focus'?300:1500;d.total=d.left;d.phase=d.phase==='focus'?'break':'focus';saveTimer(d);toast(d.phase==='break'?'专注完成，休息一下！':'休息结束，继续学习！')}let e=$('#feng-time');if(e)e.textContent=String(Math.floor(d.left/60)).padStart(2,'0')+':'+String(d.left%60).padStart(2,'0');if($('#feng-phase'))$('#feng-phase').textContent=d.phase==='focus'?'专注学习':'休息时间';let b=$('[data-pomo=toggle]');if(b)b.textContent=d.running?'暂停':'开始';status()}
+function setMinutes(n){let d={total:n*60,left:n*60,running:false,end:0,phase:n===5?'break':'focus'};saveTimer(d);drawTimer()}
+function toggleTimer(){let d=timer();if(d.running){d.left=Math.max(0,Math.ceil((d.end-Date.now())/1000));d.running=false}else{d.running=true;d.end=Date.now()+d.left*1000}saveTimer(d);drawTimer()}
+function openPomo(){drawTimer();$('#feng-pomo').hidden=false;document.body.classList.add('feng-modal-open')}
+function closePomo(){$('#feng-pomo').hidden=true;document.body.classList.remove('feng-modal-open')}
+function status(){let e=$('#feng-status');if(!e)return;let d=timer(),s=$('span',e),sm=$('small',e);s.textContent=document.body.classList.contains('feng-focus-mode')?'FOCUS MODE':'SYSTEM ONLINE';sm.textContent=d.running?'POMO '+String(Math.floor(d.left/60)).padStart(2,'0')+':'+String(d.left%60).padStart(2,'0'):'LOCAL READY'}
+function selection(){let s=getSelection();if(!state.article||!s||s.isCollapsed||!s.rangeCount||!state.article.contains(s.getRangeAt(0).commonAncestorContainer))return hideSel();let q=s.toString().trim();if(!q||q.length>3000)return hideSel();state.sel=q;state.range=s.getRangeAt(0).cloneRange();let r=state.range.getBoundingClientRect(),e=$('#feng-select');e.hidden=false;requestAnimationFrame(()=>{e.style.left=Math.max(8,Math.min(innerWidth-e.offsetWidth-8,r.left+r.width/2-e.offsetWidth/2))+'px';e.style.top=Math.max(8,r.top-e.offsetHeight-10)+'px'})}
+function hideSel(){let e=$('#feng-select');if(e)e.hidden=true}
+async function selAction(a){let q=state.sel;if(!q)return;if(a==='copy'){try{await navigator.clipboard.writeText(q);toast('已复制选中文字')}catch{toast('复制失败')}}if(a==='search')open(q.slice(0,100));if(a==='mark'){let old=$('#k408-selection-button');if(old){state.range&&getSelection()?.removeAllRanges();if(state.range)getSelection().addRange(state.range);old.click()}else toast('标记组件当前不可用')}hideSel()}
+function bind(){
+$('#feng-open').onclick=()=>open();$('#feng-focus').onclick=()=>focus();$('#feng-query').oninput=e=>{clearTimeout(searchTimer);searchTimer=setTimeout(()=>render(e.target.value),100)};
+$('#feng-command').onclick=e=>{if(e.target.closest('[data-close]'))close();let x=e.target.closest('.feng-item');if(x){e.preventDefault();run(x)}};
+$('#feng-query').onkeydown=e=>{if(e.key==='ArrowDown'){e.preventDefault();move(1)}if(e.key==='ArrowUp'){e.preventDefault();move(-1)}if(e.key==='Enter'){e.preventDefault();let out=$('#feng-results'),a=$$('.feng-item',out);run(a[out._at<0?0:out._at])}};
+$('#feng-pomo').onclick=e=>{if(e.target.closest('[data-close]'))closePomo();let m=e.target.closest('[data-min]');if(m)setMinutes(+m.dataset.min);let a=e.target.closest('[data-pomo]')?.dataset.pomo;if(a==='toggle')toggleTimer();if(a==='reset'){let d=timer();setMinutes(d.phase==='break'?5:25)}};
+$('#feng-resume').onclick=e=>{if(e.target.closest('[data-resume=yes]'))resume();if(e.target.closest('[data-resume=no]'))$('#feng-resume').hidden=true};
+$('#feng-select').addEventListener('pointerdown',e=>e.preventDefault());$('#feng-select').onclick=e=>selAction(e.target.closest('[data-sa]')?.dataset.sa);
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open()}if(e.key==='Escape'){if(!$('#feng-command').hidden)close();else if(!$('#feng-pomo').hidden)closePomo();else if(document.body.classList.contains('feng-focus-mode'))focus(false);hideSel()}if(!edit(e.target)&&e.key==='f'&&!e.ctrlKey&&!e.metaKey)focus()});
+document.addEventListener('mouseup',()=>setTimeout(selection));document.addEventListener('touchend',()=>setTimeout(selection,150),{passive:true});addEventListener('scroll',()=>{hideSel();clearTimeout(posTimer);posTimer=setTimeout(savePos,300)},{passive:true});addEventListener('pagehide',savePos);document.addEventListener('visibilitychange',()=>document.hidden&&savePos())}
+function init(){build();theme(get(THEME,'auto'));checkPos();drawTimer();clearInterval(state.tick);state.tick=setInterval(drawTimer,1000);new MutationObserver(()=>{let a=$(A);if(a&&a!==state.article){savePos();state.article=a;setTimeout(checkPos,80)}}).observe(document.body,{childList:true,subtree:true});console.info('[study-tools] 1.0.1 loaded')}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init,{once:true}):init();
+})();
