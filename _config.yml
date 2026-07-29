@@ -97,12 +97,12 @@ inject:
     - '<link rel="stylesheet" href="/css/tech.css?v=8.2.2">'
     - '<link rel="stylesheet" href="/css/annotations.css?v=1.0.2">'
     - '<link rel="stylesheet" href="/css/study-tools.css?v=1.0.3">'
-    - '<link rel="stylesheet" href="/css/k408-tools.css?v=1.0.0">'
+    - '<link rel="stylesheet" href="/css/k408-tools.css?v=1.1.0">'
   script:
     - '<script src="/js/tech.js?v=8.2.1" defer></script>'
     - '<script src="/js/annotations.js?v=1.0.2" defer></script>'
-    - '<script src="/js/study-tools.js?v=1.0.3" defer></script>'
-    - '<script src="/js/k408-tools.js?v=1.0.0" defer></script>'
+    - '<script src="/js/study-tools.js?v=1.0.4" defer></script>'
+    - '<script src="/js/k408-tools.js?v=1.1.0" defer></script>'
     - '<script src="/js/diagnostics.js?v=1.0.0" defer></script>'
 
 # Extensions
