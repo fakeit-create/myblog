@@ -26,8 +26,15 @@ function build(){
   };
   const placeAtSavedPosition=position=>{
     if(!position)return;
-    const x=Number(position.x),y=Number(position.y);
-    const p=clampPosition(Number.isFinite(x)?x:8,Number.isFinite(y)?y:8);
+    const rawX=Number(position.x),rawY=Number(position.y);
+    const x=Number.isFinite(rawX)?rawX:8,y=Number.isFinite(rawY)?rawY:8;
+    let targetX=x;
+    // 保存的是收缩按钮的左上角。按钮位于屏幕右半侧时，展开面板向左伸展，
+    // 避免仍从原坐标向右展开而超出屏幕。
+    if(!root.classList.contains('is-hidden')&&x+26>window.innerWidth/2){
+      targetX=x+52-root.offsetWidth;
+    }
+    const p=clampPosition(targetX,y);
     root.style.left=p.x+'px';root.style.top=p.y+'px';
     root.style.right='auto';root.style.bottom='auto';
   };
