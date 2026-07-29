@@ -12,13 +12,38 @@
 
   const state = { article: null, selected: null, editingId: null, marks: [] };
   const $ = (selector, root = document) => root.querySelector(selector);
-  const pageKey = () => `${location.origin}${location.pathname.replace(/\/+$/, '/')}`;
+
+  // 标记只按文章路径归档，不绑定协议、域名或本地预览端口。
+  // 这样 localhost、http/https 和正式域名之间导入备份时仍能对应同一篇文章。
+  function normalizePageKey(value = location.href) {
+    try {
+      let path = new URL(value, location.origin).pathname || '/';
+      try { path = decodeURIComponent(path); } catch (_) {}
+      path = path.replace(/\/index\.html?$/i, '/').replace(/\/{2,}/g, '/');
+      if (!path.startsWith('/')) path = `/${path}`;
+      return path.length > 1 ? path.replace(/\/+$/, '') : '/';
+    } catch (_) { return String(value || '/'); }
+  }
+  const pageKey = () => normalizePageKey();
   const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
+
+  function normalizeStore(data) {
+    const result = {};
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return result;
+    for (const [key, values] of Object.entries(data)) {
+      if (!Array.isArray(values)) continue;
+      const normalized = normalizePageKey(key);
+      const map = new Map((result[normalized] || []).map(item => [item.id, item]));
+      values.forEach(item => { if (item?.id && item?.quote) map.set(item.id, item); });
+      result[normalized] = [...map.values()];
+    }
+    return result;
+  }
 
   function loadAll() {
     try {
       const data = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
-      return data && typeof data === 'object' ? data : {};
+      return normalizeStore(data);
     } catch (_) { return {}; }
   }
 
@@ -362,15 +387,16 @@
       if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new Error('invalid');
       if (!confirm('导入会与现有标记合并，相同标记以备份内容为准。是否继续？')) return;
       const current = loadAll();
-      for (const [key, values] of Object.entries(incoming)) {
-        if (!Array.isArray(values)) continue;
+      const normalizedIncoming = normalizeStore(incoming);
+      for (const [key, values] of Object.entries(normalizedIncoming)) {
         const map = new Map((current[key] || []).map(item => [item.id, item]));
-        values.forEach(item => { if (item?.id && item?.quote) map.set(item.id, item); });
+        values.forEach(item => map.set(item.id, item));
         current[key] = [...map.values()];
       }
       localStorage.setItem(STORE_KEY, JSON.stringify(current));
       renderMarks();
-      toast('标记备份已导入');
+      const count = pageMarks().length;
+      toast(count ? `导入成功，本页找到 ${count} 条标记` : '导入成功，但备份中没有当前文章的标记');
     } catch (_) { toast('导入失败：请选择正确的 JSON 备份文件'); }
   }
 
