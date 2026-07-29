@@ -26,6 +26,9 @@ function commands(){return[
 {icon:'◫',title:document.body.classList.contains('feng-focus-mode')?'退出专注阅读':'进入专注阅读',sub:'隐藏侧栏和干扰元素',keys:'focus 专注',run:focus},
 {icon:'◐',title:'切换主题（'+({auto:'自动',light:'浅色',dark:'深色'}[state.mode])+ '）',sub:'自动 → 浅色 → 深色',keys:'theme 主题 深色 浅色',run:cycleTheme},
 {icon:'◷',title:'打开 408 番茄钟',sub:'25 分钟专注 / 5 分钟休息',keys:'timer pomodoro 番茄钟',run:openPomo},
+{icon:'⌛',title:'408 考试倒计时',sub:'查看考试剩余时间与阶段进度',keys:'408 countdown 考试 倒计时',run:()=>location.href='/tools/408/'},
+{icon:'⇄',title:'易混概念对比卡',sub:'四科核心概念检索与对比',keys:'concept compare 易混 概念 对比卡',run:()=>location.href='/tools/408/#concepts'},
+{icon:'◇',title:'功能诊断页',sub:'检查资源、搜索、存储与重复加载',keys:'diagnostics debug 诊断 检查',run:()=>location.href='/diagnostics/'},
 {icon:'↟',title:'返回顶部',sub:'滚动到页面顶部',keys:'top 顶部',run:()=>scrollTo({top:0,behavior:'smooth'})},
 ...(state.resume?[{icon:'↪',title:'回到上次阅读位置',sub:state.resume.percent+'%',keys:'resume 继续',run:resume}]:[])]}
 async function load(){if(state.data)return state.data;try{let r=await fetch('/search.json');if(!r.ok)throw 0;let j=await r.json(),a=Array.isArray(j)?j:(j.posts||j.pages||[]);return state.data=a.map(x=>({title:text(x.title)||'未命名页面',url:x.url||x.path||'/',content:text(x.content||x.description)}))}catch{return state.data=[]}}
