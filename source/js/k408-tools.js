@@ -17,18 +17,23 @@ function build(){
     </div>`;
   document.body.append(root);
   const button=$('.k408-count-toggle',root);
-  const clampPosition=(x,y)=>({
-    x:Math.max(8,Math.min(x,window.innerWidth-60)),
-    y:Math.max(8,Math.min(y,window.innerHeight-48))
-  });
-  const placeCollapsed=position=>{
+  const clampPosition=(x,y)=>{
+    const width=root.offsetWidth||52,height=root.offsetHeight||40;
+    return {
+      x:Math.max(8,Math.min(x,Math.max(8,window.innerWidth-width-8))),
+      y:Math.max(8,Math.min(y,Math.max(8,window.innerHeight-height-8)))
+    };
+  };
+  const placeAtSavedPosition=position=>{
     if(!position)return;
-    const p=clampPosition(Number(position.x)||8,Number(position.y)||8);
+    const x=Number(position.x),y=Number(position.y);
+    const p=clampPosition(Number.isFinite(x)?x:8,Number.isFinite(y)?y:8);
     root.style.left=p.x+'px';root.style.top=p.y+'px';
     root.style.right='auto';root.style.bottom='auto';
   };
   const restorePosition=()=>{
-    try{const saved=JSON.parse(localStorage.getItem(POS_KEY));if(saved)placeCollapsed(saved)}catch{}
+    try{const saved=JSON.parse(localStorage.getItem(POS_KEY));if(saved){placeAtSavedPosition(saved);return true}}catch{}
+    return false;
   };
   const resetPosition=()=>{
     root.style.removeProperty('left');root.style.removeProperty('top');
@@ -39,7 +44,7 @@ function build(){
     button.textContent=hidden?'408':'−';
     button.title=hidden?'拖动可移动，点击显示倒计时':'隐藏倒计时';
     button.setAttribute('aria-expanded',String(!hidden));
-    if(hidden)restorePosition();else resetPosition();
+    if(hidden){restorePosition()}else if(!restorePosition()){resetPosition()}
     try{localStorage.setItem(KEY,hidden?'1':'0')}catch{}
   };
   let hidden=false;try{hidden=localStorage.getItem(KEY)==='1'}catch{}
@@ -57,13 +62,13 @@ function build(){
     const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
     if(!drag.moved&&Math.hypot(dx,dy)<4)return;
     drag.moved=true;event.preventDefault();
-    placeCollapsed({x:drag.left+dx,y:drag.top+dy});
+    placeAtSavedPosition({x:drag.left+dx,y:drag.top+dy});
   });
   const finishDrag=event=>{
     if(!drag||event.pointerId!==drag.id)return;
     if(drag.moved){
       const rect=root.getBoundingClientRect(),position=clampPosition(rect.left,rect.top);
-      placeCollapsed(position);suppressClick=true;
+      placeAtSavedPosition(position);suppressClick=true;
       try{localStorage.setItem(POS_KEY,JSON.stringify(position))}catch{}
     }
     drag=null;
@@ -77,7 +82,7 @@ function build(){
   window.addEventListener('resize',()=>{
     if(!root.classList.contains('is-hidden'))return;
     const rect=root.getBoundingClientRect(),position=clampPosition(rect.left,rect.top);
-    placeCollapsed(position);
+    placeAtSavedPosition(position);
     try{localStorage.setItem(POS_KEY,JSON.stringify(position))}catch{}
   });
   const draw=()=>{
