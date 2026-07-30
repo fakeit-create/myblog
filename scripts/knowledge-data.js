@@ -17,9 +17,20 @@ const names = value => array(value)
   .map(item => text(item && typeof item === 'object' ? item.name : item))
   .filter(Boolean);
 
+const prettyPath = path => {
+  const value = String(path || '').trim().replace(/^\/+/, '');
+  if (!value) return '';
+  // Hexo locals expose rendered pages as *.html paths, while this site deploys
+  // them as pretty directory URLs. Keep graph links consistent with the real route.
+  return value
+    .replace(/(?:^|\/)index\.html$/i, '')
+    .replace(/\.html$/i, '/')
+    .replace(/\/{2,}/g, '/');
+};
+
 const joinUrl = (root, path) => {
   const base = String(root || '/').replace(/\/+$/, '');
-  return (base + '/' + String(path || '').replace(/^\/+/, '')).replace(/\/{2,}/g, '/');
+  return (base + '/' + prettyPath(path)).replace(/\/{2,}/g, '/');
 };
 
 hexo.extend.generator.register('feng-knowledge-data', function (locals) {
@@ -49,10 +60,7 @@ hexo.extend.generator.register('feng-knowledge-data', function (locals) {
       url: joinUrl(siteRoot, path),
       date: item.date ? new Date(item.date).toISOString() : '',
       categories,
-      tags,
-      source: String(item.source || ''),
-      slug: String(item.slug || ''),
-      order: Number.isFinite(Number(item.order)) ? Number(item.order) : null
+      tags
     });
   };
 
@@ -104,26 +112,4 @@ hexo.extend.generator.register('feng-knowledge-data', function (locals) {
       }
     })
   };
-});
-
-
-// Stellar local_search is configured, but this project intentionally carries no
-// third-party search generator. Emit the compatible index here so Ctrl+K and
-// the theme search work after a clean checkout/build.
-hexo.extend.generator.register('feng-local-search', function (locals) {
-  const root = this.config.root || '/';
-  const rows = [];
-  const used = new Set();
-  const add = item => {
-    if (!item || item.indexing === false || item.published === false || !item.path || used.has(item.path)) return;
-    used.add(item.path);
-    rows.push({
-      title: text(item.title) || '未命名页面',
-      url: joinUrl(root, item.path),
-      content: text(item.content || item._content || item.excerpt || item.description || '')
-    });
-  };
-  array(locals.posts).forEach(add);
-  array(locals.pages).forEach(add);
-  return { path: 'search.json', data: JSON.stringify(rows) };
 });
