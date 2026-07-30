@@ -22,11 +22,12 @@ hexo.extend.filter.register('after_render:html', function (html, data) {
   const year = new Date().getFullYear();
 
   const home = `
-<link rel="stylesheet" href="${this.config.root}css/homepage.css?v=1.0.0">
+<link rel="stylesheet" href="${this.config.root}css/homepage.css?v=1.1.0">
+<script src="${this.config.root}js/homepage-motion.js?v=1.1.0" defer></script>
 <section class="feng-home" id="feng-home" aria-labelledby="feng-home-title">
   <div class="feng-hero">
     <div class="feng-hero-inner">
-    <div class="feng-hero-copy">
+    <div class="feng-hero-copy feng-scroll-text" data-feng-scroll="hero">
       <p class="feng-eyebrow"><span></span> WELCOME TO MY DIGITAL GARDEN</p>
       <h1 id="feng-home-title">Hi, I'm <em>Feng</em> <span class="feng-wave" aria-hidden="true">👋</span></h1>
       <p class="feng-lead">欢迎来到 FENG // LAB</p>
@@ -41,7 +42,7 @@ hexo.extend.filter.register('after_render:html', function (html, data) {
         <span>·</span><a href="${this.config.root}friends/">社交</a>
       </div>
     </div>
-    <div class="feng-profile-card" aria-label="个人状态">
+    <div class="feng-profile-card feng-scroll-text" data-feng-scroll="hero-card" aria-label="个人状态">
       <div class="feng-profile-top">
         <div class="feng-avatar" aria-hidden="true"><span>F</span></div>
         <div><strong>Feng</strong><small>STUDENT · DEVELOPER</small></div>
@@ -60,7 +61,7 @@ hexo.extend.filter.register('after_render:html', function (html, data) {
   </div>
 
   <section class="feng-section" id="feng-about" aria-labelledby="feng-about-title">
-    <div class="feng-section-head">
+    <div class="feng-section-head feng-scroll-text" data-feng-scroll="section">
       <div><p>ABOUT ME</p><h2 id="feng-about-title">认识一下</h2></div>
       <span>01</span>
     </div>
@@ -99,7 +100,7 @@ hexo.extend.filter.register('after_render:html', function (html, data) {
     <i></i><div><strong>${year}</strong><span>持续记录</span></div>
   </div>
 
-  <div class="feng-post-heading">
+  <div class="feng-post-heading feng-scroll-text" data-feng-scroll="section">
     <div><p>RECENT WRITING</p><h2>最近文章</h2></div>
     <a href="${this.config.root}archives/">查看全部 <span aria-hidden="true">→</span></a>
   </div>

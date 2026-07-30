@@ -175,13 +175,63 @@ body:has(#feng-home) {
 body:has(#feng-home) .post-list .post-card { border-radius:16px !important; background:rgba(18,23,34,.72) !important; border-color:var(--home-line) !important; box-shadow:none !important; }
 body:has(#feng-home) .post-list .post-card:hover { border-color:rgba(139,177,255,.28) !important; box-shadow:0 14px 35px rgba(0,0,0,.15) !important; }
 
+
+/* Homepage desktop layout: give the landing page the entire area beside
+   Stellar's left navigation instead of centering it in the narrow article column. */
+@media (min-width: 769px) {
+  body:has(#feng-home) .l_body.index {
+    width: 100%;
+    max-width: none;
+    grid-template-columns: max-content minmax(0, 1fr);
+    grid-gap: 0;
+    margin: 0;
+  }
+  body:has(#feng-home) .l_body.index > .l_left { grid-column: 1; }
+  body:has(#feng-home) .l_body.index > .l_main {
+    grid-column: 2;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  body:has(#feng-home) .l_body.index > .l_right { display: none !important; }
+  body:has(#feng-home) .feng-hero {
+    left: auto;
+    width: 100%;
+    margin-left: 0;
+  }
+  body:has(#feng-home) .feng-section,
+  body:has(#feng-home) .feng-stats,
+  body:has(#feng-home) .feng-post-heading,
+  body:has(#feng-home) .post-list,
+  body:has(#feng-home) .paginator,
+  body:has(#feng-home) .nav-tabs {
+    width: min(1080px, calc(100% - 3rem));
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Scroll-linked typography. JS only updates two custom properties in one rAF;
+   transforms/opacity stay on the compositor and do not trigger layout. */
+.feng-scroll-text {
+  --feng-scroll-scale: 1;
+  --feng-scroll-opacity: 1;
+  --feng-scroll-y: 0px;
+  opacity: var(--feng-scroll-opacity);
+  transform: translate3d(0, var(--feng-scroll-y), 0) scale(var(--feng-scroll-scale));
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+.feng-hero-copy.feng-scroll-text { transform-origin: left center; }
+.feng-scroll-text.is-scroll-idle { will-change: auto; }
+
 @keyframes feng-wave { 0%,100%{transform:rotate(0)} 25%{transform:rotate(14deg)} 50%{transform:rotate(-8deg)} 75%{transform:rotate(12deg)} }
 @keyframes feng-blink { 50%{opacity:0} }
 @keyframes feng-scroll-line { 0%,100%{transform:scaleY(.35);opacity:.35} 50%{transform:scaleY(1);opacity:1} }
 
 @media (max-width: 760px) {
   .feng-home { padding-top:0; }
-  .feng-hero { min-height:100vh; min-height:100svh; }
+  .feng-hero { left:auto; width:100%; margin-left:0; min-height:100vh; min-height:100svh; }
   .feng-hero-inner { width:min(100% - 2rem, 560px); grid-template-columns:1fr; gap:2.2rem; padding:5rem 0 4.5rem; }
   .feng-hero h1 { font-size:clamp(2.55rem,14vw,4rem); }
   .feng-description br { display:none; }
