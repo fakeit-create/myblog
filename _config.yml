@@ -106,7 +106,7 @@ inject:
     - '<script src="/js/study-tools.js?v=1.0.5" defer></script>'
     - '<script src="/js/k408-tools.js?v=1.2.0" defer></script>'
     - '<script src="/js/diagnostics.js?v=1.0.1" defer></script>'
-    - '<script src="/js/knowledge-map.js?v=1.0.1" defer></script>'
+    - '<script src="/js/knowledge-map.js?v=1.0.2" defer></script>'
     - '<script src="/js/reading-progress.js?v=1.0.0" defer></script>'
 
 # Extensions

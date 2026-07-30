@@ -16,12 +16,33 @@
   }
 
   async function loadData() {
-    const url = new URL('knowledge-data.json', document.baseURI);
-    url.searchParams.set('_', String(Date.now()));
-    const response = await fetch(url, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`knowledge-data.json 返回 HTTP ${response.status}`);
-    const raw = await response.json();
-    return normalise(raw);
+    // knowledge-map 页面通常位于 /knowledge-map/，不能使用相对于当前页面的
+    // knowledge-data.json，否则浏览器会误请求 /knowledge-map/knowledge-data.json。
+    // 先读取站点根目录；后面的候选地址用于兼容部署在子目录中的 Hexo 网站。
+    const roots = [
+      document.documentElement.dataset.root,
+      one('meta[name=hexo-root]')?.content,
+      one('link[rel=canonical]')?.getAttribute('data-root'),
+      '/'
+    ].filter(Boolean);
+    const candidates = [...new Set(roots.map(root => {
+      const base = `/${String(root).replace(/^\/+|\/+$/g, '')}/`.replace(/\/{2,}/g, '/');
+      return `${base}knowledge-data.json`;
+    }))];
+
+    let lastError;
+    for (const path of candidates) {
+      try {
+        const url = new URL(path, location.origin);
+        url.searchParams.set('_', String(Date.now()));
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`${url.pathname} 返回 HTTP ${response.status}`);
+        return normalise(await response.json());
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    throw new Error(`knowledge-data.json 加载失败：${lastError?.message || '未知错误'}`);
   }
 
   async function init() {
@@ -35,7 +56,7 @@
     try {
       data = await loadData();
     } catch (error) {
-      app.innerHTML = `<div class="fkg-empty"><div><b>知识数据加载失败</b><p>${escapeHtml(error.message)}</p><small>请重新执行 Hexo 生成并部署 public/knowledge-data.json。</small></div></div>`;
+      app.innerHTML = `<div class="fkg-empty"><div><b>知识数据加载失败</b><p>${escapeHtml(error.message)}</p><small>请重新执行 Hexo 生成，并确认 public/knowledge-data.json 已部署到站点根目录。</small></div></div>`;
       return;
     }
 
