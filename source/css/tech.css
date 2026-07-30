@@ -935,3 +935,29 @@ body::before { animation: none !important; }
 .tech-low-power .feng-backdrop,
 .tech-low-power .k408-dialog-backdrop{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 @media(max-width:768px){.post-list .post-card{contain-intrinsic-size:auto 240px}}
+
+
+/* v8.4 shared document transition ---------------------------------------- */
+body > .l_body, body > .site-footer {
+  transition: opacity .22s ease, transform .22s cubic-bezier(.2,.72,.2,1), filter .22s ease;
+}
+body.tech-page-entering > .l_body,
+body.tech-page-entering > .site-footer {
+  opacity: 0;
+  transform: translate3d(0,12px,0) scale(.996);
+  filter: saturate(.72);
+}
+body.tech-page-leaving > .l_body,
+body.tech-page-leaving > .site-footer {
+  opacity: 0;
+  transform: translate3d(0,-8px,0) scale(.998);
+  filter: saturate(.72);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  body > .l_body, body > .site-footer { transition: none !important; }
+  body.tech-page-entering > .l_body, body.tech-page-entering > .site-footer,
+  body.tech-page-leaving > .l_body, body.tech-page-leaving > .site-footer {
+    opacity: 1 !important; transform: none !important; filter: none !important;
+  }
+}

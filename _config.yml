@@ -94,19 +94,19 @@ ignore:
 # Custom front-end assets
 inject:
   head:
-    - '<link rel="stylesheet" href="/css/tech.css?v=8.3.0">'
+    - '<link rel="stylesheet" href="/css/tech.css?v=8.4.0">'
     - '<link rel="stylesheet" href="/css/annotations.css?v=1.0.3">'
     - '<link rel="stylesheet" href="/css/study-tools.css?v=1.0.5">'
     - '<link rel="stylesheet" href="/css/k408-tools.css?v=1.2.0">'
-    - '<link rel="stylesheet" href="/css/knowledge-map.css?v=1.0.1">'
+    - '<link rel="stylesheet" href="/css/knowledge-map.css?v=1.1.0">'
     - '<link rel="stylesheet" href="/css/reading-progress.css?v=1.0.0">'
   script:
-    - '<script src="/js/tech.js?v=8.3.0" defer></script>'
+    - '<script src="/js/tech.js?v=8.4.0" defer></script>'
     - '<script src="/js/annotations.js?v=1.0.3" defer></script>'
     - '<script src="/js/study-tools.js?v=1.0.5" defer></script>'
     - '<script src="/js/k408-tools.js?v=1.2.0" defer></script>'
     - '<script src="/js/diagnostics.js?v=1.0.1" defer></script>'
-    - '<script src="/js/knowledge-map.js?v=1.0.2" defer></script>'
+    - '<script src="/js/knowledge-map.js?v=1.1.0" defer></script>'
     - '<script src="/js/reading-progress.js?v=1.0.0" defer></script>'
 
 # Extensions

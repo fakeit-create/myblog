@@ -97,27 +97,57 @@
         return;
       }
 
-      const groups = new Map([
-        ['全部', docs],
-        ['408 笔记', docs.filter(item => item.type === 'wiki')],
-        ['技术文章', docs.filter(item => item.type === 'article')]
-      ]);
-      docs.forEach(doc => (doc.categories || []).forEach(category => {
-        if (!groups.has(category)) groups.set(category, docs.filter(item => (item.categories || []).includes(category)));
-      }));
-
-      panel.innerHTML = `<div class="fkg-files"><aside class="fkg-tree">${[...groups].map(([name, items], index) => `<button type="button" class="${index ? '' : 'active'}" data-group="${escapeHtml(name)}">▸ ${escapeHtml(name)} (${items.length})</button>`).join('')}</aside><main class="fkg-list"></main></div>`;
-      const list = one('.fkg-list', panel);
-      const draw = group => {
-        const items = groups.get(group) || [];
-        list.innerHTML = `<header><b>ROOT / ${escapeHtml(group)}</b><span>${items.length} 个项目</span></header>${items.map(doc => `<a class="fkg-file" href="${escapeHtml(doc.url)}"><i>${doc.type === 'wiki' ? '▤' : '◇'}</i><span>${escapeHtml(doc.title)}</span><small>${escapeHtml((doc.categories || [])[0] || doc.type)}</small></a>`).join('')}`;
+      // Build a real path tree rather than a flat category filter. Source paths
+      // are emitted by the Hexo generator; old data remains compatible by
+      // falling back to the public URL.
+      const root = { name: 'ROOT', path: '', folders: new Map(), files: [] };
+      const cleanPath = doc => {
+        let path = String(doc.source || doc.url || '').replace(/^https?:\/\/[^/]+/i, '').replace(/^\/+|\/+$/g, '');
+        path = path.replace(/^source\//, '').replace(/\.(md|markdown|html?)$/i, '');
+        path = path.replace(/\/(index)$/i, '');
+        return path || String(doc.slug || doc.title || 'untitled');
       };
-      draw('全部');
+      docs.forEach(doc => {
+        const parts = cleanPath(doc).split('/').filter(Boolean);
+        const fileName = parts.pop() || doc.title;
+        let node = root;
+        parts.forEach(part => {
+          if (!node.folders.has(part)) node.folders.set(part, { name: part, path: [node.path, part].filter(Boolean).join('/'), folders: new Map(), files: [] });
+          node = node.folders.get(part);
+        });
+        node.files.push({ ...doc, fileName });
+      });
+      const folders = [root];
+      const walk = node => [...node.folders.values()].sort((a,b)=>a.name.localeCompare(b.name,'zh-CN')).forEach(child => { folders.push(child); walk(child); });
+      walk(root);
+      const countFiles = node => node.files.length + [...node.folders.values()].reduce((sum, child) => sum + countFiles(child), 0);
+      const label = node => node === root ? 'ROOT' : node.name;
+
+      panel.innerHTML = `<div class="fkg-files"><aside class="fkg-tree" aria-label="内容目录树"></aside><main class="fkg-list"></main></div>`;
+      const tree = one('.fkg-tree', panel), list = one('.fkg-list', panel);
+      tree.innerHTML = folders.map((node,index) => {
+        const depth = node === root ? 0 : node.path.split('/').length;
+        return `<button type="button" class="${index ? '' : 'active'}" data-folder="${escapeHtml(node.path)}" style="--depth:${depth}"><i>${node.folders.size ? '▾' : '·'}</i><span>${escapeHtml(label(node))}</span><small>${countFiles(node)}</small></button>`;
+      }).join('');
+      const byPath = new Map(folders.map(node => [node.path, node]));
+      const draw = path => {
+        const node = byPath.get(path) || root;
+        const childFolders = [...node.folders.values()].sort((a,b)=>a.name.localeCompare(b.name,'zh-CN'));
+        const files = node.files.slice().sort((a,b) => (a.order ?? 9999) - (b.order ?? 9999) || a.title.localeCompare(b.title,'zh-CN'));
+        const crumbs = ['ROOT', ...node.path.split('/').filter(Boolean)];
+        list.innerHTML = `<header><b>${crumbs.map(escapeHtml).join(' / ')}</b><span>${childFolders.length} 个目录 · ${files.length} 个文件</span></header>`+
+          childFolders.map(folder => `<button class="fkg-file fkg-folder" type="button" data-open-folder="${escapeHtml(folder.path)}"><i>▾</i><span>${escapeHtml(folder.name)}</span><small>${countFiles(folder)} 项</small></button>`).join('')+
+          files.map(doc => `<a class="fkg-file" href="${escapeHtml(doc.url)}"><i>${doc.type === 'wiki' ? '▤' : '◇'}</i><span><b>${escapeHtml(doc.title)}</b><em>${escapeHtml(doc.fileName)}</em></span><small>${escapeHtml((doc.categories || [])[0] || doc.type)}</small></a>`).join('')+
+          (!childFolders.length && !files.length ? '<div class="fkg-empty"><p>此目录为空</p></div>' : '');
+      };
+      const openFolder = path => {
+        all('[data-folder]', panel).forEach(item => item.classList.toggle('active', item.dataset.folder === path));
+        draw(path);
+      };
+      draw('');
       panel.onclick = event => {
-        const button = event.target.closest('[data-group]');
-        if (!button) return;
-        all('[data-group]', panel).forEach(item => item.classList.toggle('active', item === button));
-        draw(button.dataset.group);
+        const button = event.target.closest('[data-folder],[data-open-folder]');
+        if (button) openFolder(button.dataset.folder ?? button.dataset.openFolder);
       };
       stopView = () => { panel.onclick = null; };
     }

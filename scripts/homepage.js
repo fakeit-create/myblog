@@ -15,8 +15,8 @@ hexo.extend.filter.register('after_render:html', function (html, data) {
   const categoryLinks=categories.sort('name').limit(8).map(c=>`<a href="${joinUrl(root,c.path)}">${escapeHtml(c.name)}<span>${c.length||0}</span></a>`).join('') || '<span class="feng-empty">暂无分类</span>';
   const tagLinks=tags.sort('name').limit(12).map(t=>`<a href="${joinUrl(root,t.path)}"># ${escapeHtml(t.name)}</a>`).join('') || '<span class="feng-empty">暂无标签</span>';
   const home=`
-<link rel="stylesheet" href="${root}css/homepage.css?v=2.0.0">
-<script src="${root}js/homepage-motion.js?v=2.0.0" defer></script>
+<link rel="stylesheet" href="${root}css/homepage.css?v=2.1.0">
+<script src="${root}js/homepage-motion.js?v=2.1.0" defer></script>
 <section class="feng-home" id="feng-home" aria-labelledby="feng-home-title">
  <div class="feng-hero">
   <div class="feng-hero-inner">

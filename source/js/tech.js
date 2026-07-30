@@ -60,6 +60,37 @@
     }
 
 
+
+
+    // Shared page transitions for normal navigation. The destination page uses
+    // the same class for its entrance, so the motion feels continuous even
+    // when Stellar performs a full document load instead of PJAX.
+    const transitionState = { leaving: false };
+    const enterPage = () => {
+      document.body.classList.remove('tech-page-leaving');
+      document.body.classList.add('tech-page-entering');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        document.body.classList.remove('tech-page-entering');
+      }));
+    };
+    enterPage();
+    document.addEventListener('click', event => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = event.target.closest('a[href]');
+      if (!link || link.target === '_blank' || link.hasAttribute('download') || transitionState.leaving) return;
+      const raw = link.getAttribute('href');
+      if (!raw || raw.startsWith('#') || /^(mailto:|tel:|javascript:)/i.test(raw)) return;
+      let url;
+      try { url = new URL(link.href, location.href); } catch (_) { return; }
+      if (url.origin !== location.origin || (url.pathname === location.pathname && url.search === location.search)) return;
+      event.preventDefault();
+      transitionState.leaving = true;
+      document.body.classList.add('tech-page-leaving');
+      setTimeout(() => { location.href = url.href; }, 210);
+    });
+    addEventListener('pageshow', () => { transitionState.leaving = false; enterPage(); });
+
+
     // Correct the two legacy components with inline !important declarations.
     // This survives article-local <style> blocks, theme source order and PJAX-like swaps.
     const forceReadableLegacyUI = (root = document) => {
