@@ -9,128 +9,6 @@ const escapeHtml = value => String(value == null ? '' : value)
   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
 hexo.extend.filter.register('after_render:html', function (html, data) {
-  // Load the lightweight transition layer on every generated HTML page.
-  // The homepage itself is still only injected into index.html.
-  if (!html.includes('data-feng-global')) {
-    const root = this.config.root || '/';
-    const headAssets = `<link data-feng-global rel="stylesheet" href="${root}css/homepage.css?v=1.2.0"><script>document.documentElement.classList.add('feng-page-entering');</script>`;
-    const transitionScript = `<script data-feng-global>
-(function () {
-  'use strict';
-  var doc = document;
-  var root = doc.documentElement;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var nativeVT = !!doc.startViewTransition && CSS.supports && CSS.supports('view-transition-name: none');
-  var key = 'feng-shared-route';
-  var enteringTimer;
-
-  function normalize(url) {
-    try {
-      var value = new URL(url, location.href);
-      return value.origin + value.pathname.replace(/\/+/g, '/').replace(/\/index\.html$/, '/');
-    } catch (_) { return ''; }
-  }
-  function setName(el, name) {
-    if (el) el.style.viewTransitionName = name;
-  }
-  function cardFor(url) {
-    var target = normalize(url);
-    var cards = doc.querySelectorAll('a.post-card[href]');
-    for (var i = 0; i < cards.length; i++) {
-      if (normalize(cards[i].href) === target) return cards[i];
-    }
-    return null;
-  }
-  function markCard(card) {
-    if (!card) return false;
-    setName(card, 'feng-shared-card');
-    setName(card.querySelector('.post-title'), 'feng-shared-title');
-    setName(card.querySelector('.post-cover, .cover'), 'feng-shared-cover');
-    root.classList.add('feng-shared-active');
-    return true;
-  }
-  function markArticle() {
-    var banner = doc.querySelector('.article.banner');
-    if (!banner) return false;
-    setName(banner, 'feng-shared-card');
-    setName(banner.querySelector('h1.title, .text.title'), 'feng-shared-title');
-    setName(banner.querySelector('img.bg'), 'feng-shared-cover');
-    root.classList.add('feng-shared-active');
-    return true;
-  }
-  function prepareIncoming() {
-    var saved;
-    try { saved = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (_) { saved = null; }
-    if (!saved || Date.now() - saved.time > 120000) return;
-    var here = normalize(location.href);
-    if (here === saved.article) {
-      markArticle();
-      root.classList.add('feng-shared-to-article');
-    } else if (here === saved.home) {
-      markCard(cardFor(saved.article));
-      root.classList.add('feng-shared-to-home');
-    }
-  }
-  function saveRoute(articleUrl) {
-    try {
-      sessionStorage.setItem(key, JSON.stringify({
-        article: normalize(articleUrl),
-        home: normalize(location.origin + '${root}'),
-        time: Date.now()
-      }));
-    } catch (_) {}
-  }
-  function showPage() {
-    clearTimeout(enteringTimer);
-    root.classList.remove('feng-page-leaving');
-    root.classList.add('feng-page-ready');
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { root.classList.remove('feng-page-entering'); });
-    });
-  }
-
-  prepareIncoming();
-  root.classList.add('feng-page-entering');
-  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', showPage, { once: true });
-  else showPage();
-  window.addEventListener('pageshow', function () { prepareIncoming(); showPage(); });
-
-  doc.addEventListener('click', function (event) {
-    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    var link = event.target.closest && event.target.closest('a[href]');
-    if (!link || link.target === '_blank' || link.hasAttribute('download') || link.dataset.noTransition != null) return;
-    var url;
-    try { url = new URL(link.href, location.href); } catch (_) { return; }
-    if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return;
-    if (url.pathname === location.pathname && url.search === location.search && url.hash) return;
-    if (url.href === location.href) return;
-
-    var card = link.matches('a.post-card') ? link : link.closest('a.post-card');
-    var leavingArticle = doc.querySelector('.article.banner') && normalize(url.href) === normalize(location.origin + '/');
-    var shared = false;
-    if (!reduce && card) {
-      saveRoute(url.href);
-      shared = markCard(card);
-      root.classList.add('feng-shared-to-article');
-    } else if (!reduce && leavingArticle) {
-      shared = markArticle();
-      root.classList.add('feng-shared-to-home');
-    }
-
-    // Chromium can perform a real cross-document shared-element transition.
-    // Other browsers retain the short, lightweight fade fallback.
-    if (nativeVT && shared) return;
-    if (reduce) return;
-    event.preventDefault();
-    root.classList.add('feng-page-leaving');
-    setTimeout(function () { location.href = url.href; }, 180);
-  }, false);
-})();
-</script>`;
-    html = html.includes('</head>') ? html.replace('</head>', headAssets + '\n</head>') : headAssets + html;
-    html = html.includes('</body>') ? html.replace('</body>', transitionScript + '\n</body>') : html + transitionScript;
-  }
-
   const route = String(data.path || '').replace(/^\/+|\/+$/g, '');
   if (route && route !== 'index.html') return html;
   if (!html.includes('<div class="post-list post">') || html.includes('id="feng-home"')) return html;
@@ -144,8 +22,10 @@ hexo.extend.filter.register('after_render:html', function (html, data) {
   const year = new Date().getFullYear();
 
   const home = `
+<link rel="stylesheet" href="${this.config.root}css/homepage.css?v=1.0.0">
 <section class="feng-home" id="feng-home" aria-labelledby="feng-home-title">
   <div class="feng-hero">
+    <div class="feng-hero-inner">
     <div class="feng-hero-copy">
       <p class="feng-eyebrow"><span></span> WELCOME TO MY DIGITAL GARDEN</p>
       <h1 id="feng-home-title">Hi, I'm <em>Feng</em> <span class="feng-wave" aria-hidden="true">👋</span></h1>
@@ -175,9 +55,11 @@ hexo.extend.filter.register('after_render:html', function (html, data) {
       </dl>
       <div class="feng-terminal" aria-hidden="true"><span>$</span> learning --every-day<i></i></div>
     </div>
+    </div>
+    <a class="feng-scroll-cue" href="#feng-about" aria-label="向下滚动查看关于我"><span>SCROLL</span><i></i></a>
   </div>
 
-  <section class="feng-section" aria-labelledby="feng-about-title">
+  <section class="feng-section" id="feng-about" aria-labelledby="feng-about-title">
     <div class="feng-section-head">
       <div><p>ABOUT ME</p><h2 id="feng-about-title">认识一下</h2></div>
       <span>01</span>

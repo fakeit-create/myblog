@@ -11,83 +11,6 @@
   --home-green: #67d9a4;
 }
 
-
-
-/* Smooth cross-page navigation. It affects only the main page layer, not fixed menus. */
-html { background: #0a0d14; }
-html.feng-page-ready body {
-  transition: opacity .18s ease, transform .18s cubic-bezier(.22,.61,.36,1), filter .18s ease;
-}
-html.feng-page-entering body {
-  opacity: 0;
-  transform: translateY(7px);
-  filter: blur(2px);
-}
-html.feng-page-leaving body {
-  opacity: 0;
-  transform: translateY(-5px);
-  filter: blur(2px);
-  pointer-events: none;
-}
-
-/* Native cross-document View Transitions in supported browsers. */
-@view-transition { navigation: auto; }
-::view-transition-old(root) {
-  animation: feng-page-out .18s cubic-bezier(.4,0,1,1) both;
-}
-::view-transition-new(root) {
-  animation: feng-page-in .28s cubic-bezier(.16,1,.3,1) both;
-}
-@keyframes feng-page-out {
-  to { opacity: 0; transform: scale(.992); filter: blur(2px); }
-}
-@keyframes feng-page-in {
-  from { opacity: 0; transform: translateY(8px) scale(.996); filter: blur(3px); }
-  to { opacity: 1; transform: none; filter: none; }
-}
-
-/* Cross-document shared elements: a post card expands into the article banner. */
-::view-transition-group(feng-shared-card) {
-  z-index: 30;
-  animation-duration: .68s;
-  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
-}
-::view-transition-old(feng-shared-card),
-::view-transition-new(feng-shared-card) {
-  height: 100%;
-  overflow: clip;
-  mix-blend-mode: normal;
-  animation-duration: .68s;
-  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
-}
-::view-transition-group(feng-shared-title) {
-  z-index: 33;
-  animation-duration: .68s;
-  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
-}
-::view-transition-old(feng-shared-title),
-::view-transition-new(feng-shared-title),
-::view-transition-old(feng-shared-cover),
-::view-transition-new(feng-shared-cover) {
-  mix-blend-mode: normal;
-}
-::view-transition-group(feng-shared-cover) {
-  z-index: 31;
-  animation-duration: .68s;
-  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
-}
-html.feng-shared-active::view-transition-old(root) {
-  animation: feng-shared-root-out .24s ease both;
-}
-html.feng-shared-active::view-transition-new(root) {
-  animation: feng-shared-root-in .42s .12s cubic-bezier(.16,1,.3,1) both;
-}
-@keyframes feng-shared-root-out { to { opacity: .18; filter: blur(2px); } }
-@keyframes feng-shared-root-in {
-  from { opacity: 0; filter: blur(3px); }
-  to { opacity: 1; filter: none; }
-}
-
 /* The landing page uses quiet atmosphere instead of continuously animated particles. */
 body:has(#feng-home) #tech-particles,
 body:has(#feng-home) #tech-hud-frame { display: none !important; }
@@ -99,17 +22,68 @@ body:has(#feng-home) {
     var(--home-bg) !important;
 }
 
-.feng-home { color: var(--home-text); padding: 2.5rem 0 1rem; }
+.feng-home { color: var(--home-text); padding: 0 0 1rem; }
 .feng-home *, .feng-home *::before, .feng-home *::after { box-sizing: border-box; }
 .feng-home a { text-decoration: none !important; }
 
 .feng-hero {
-  min-height: min(660px, 72vh);
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100svh;
+  margin-left: -50vw;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  border-bottom: 1px solid var(--home-line);
+  background:
+    radial-gradient(44rem 34rem at 68% 22%, rgba(105, 99, 220, .12), transparent 72%),
+    radial-gradient(40rem 30rem at 28% 44%, rgba(44, 129, 194, .09), transparent 72%);
+}
+.feng-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .22;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(151,168,201,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(151,168,201,.055) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent);
+}
+.feng-hero-inner {
+  width: min(1080px, calc(100% - 3rem));
+  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
   align-items: center;
   gap: clamp(2rem, 7vw, 6rem);
-  padding: clamp(3rem, 8vw, 7rem) clamp(.2rem, 2vw, 1.2rem);
+  padding: clamp(5rem, 10vh, 7.5rem) 0;
+}
+.feng-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.15rem, 3vh, 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .45rem;
+  color: #66748a !important;
+  font: 650 .56rem/1 ui-monospace, monospace;
+  letter-spacing: .18em;
+  transform: translateX(-50%);
+}
+.feng-scroll-cue i {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(var(--home-blue), transparent);
+  transform-origin: top;
+  animation: feng-scroll-line 1.8s ease-in-out infinite;
 }
 .feng-eyebrow, .feng-section-head p, .feng-post-heading p {
   margin: 0 0 .8rem; color: var(--home-blue); font: 700 .7rem/1.3 ui-monospace, monospace;
@@ -203,10 +177,12 @@ body:has(#feng-home) .post-list .post-card:hover { border-color:rgba(139,177,255
 
 @keyframes feng-wave { 0%,100%{transform:rotate(0)} 25%{transform:rotate(14deg)} 50%{transform:rotate(-8deg)} 75%{transform:rotate(12deg)} }
 @keyframes feng-blink { 50%{opacity:0} }
+@keyframes feng-scroll-line { 0%,100%{transform:scaleY(.35);opacity:.35} 50%{transform:scaleY(1);opacity:1} }
 
 @media (max-width: 760px) {
   .feng-home { padding-top:0; }
-  .feng-hero { min-height:auto; grid-template-columns:1fr; gap:2.4rem; padding:4.2rem 0 3rem; }
+  .feng-hero { min-height:100vh; min-height:100svh; }
+  .feng-hero-inner { width:min(100% - 2rem, 560px); grid-template-columns:1fr; gap:2.2rem; padding:5rem 0 4.5rem; }
   .feng-hero h1 { font-size:clamp(2.55rem,14vw,4rem); }
   .feng-description br { display:none; }
   .feng-profile-card { max-width:460px; }
@@ -225,11 +201,5 @@ body:has(#feng-home) .post-list .post-card:hover { border-color:rgba(139,177,255
   .feng-stats div:last-child,.feng-stats i:last-of-type { display:none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  html.feng-page-ready body { transition: none !important; }
-  html.feng-page-entering body,
-  html.feng-page-leaving body { opacity: 1 !important; transform: none !important; filter: none !important; }
-  ::view-transition-old(root), ::view-transition-new(root),
-  ::view-transition-group(feng-shared-card), ::view-transition-group(feng-shared-title),
-  ::view-transition-group(feng-shared-cover) { animation: none !important; }
   .feng-home *, .feng-home *::before, .feng-home *::after { animation:none !important; transition:none !important; }
 }
