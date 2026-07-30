@@ -22,7 +22,6 @@ function theme(mode,notice=false){if(!['auto','light','dark'].includes(mode))mod
 function cycleTheme(){let a=['auto','light','dark'];theme(a[(a.indexOf(state.mode)+1)%3],true)}
 matchMedia('(prefers-color-scheme:dark)').addEventListener?.('change',()=>state.mode==='auto'&&theme('auto'));
 function commands(){return[
-{icon:'⌕',title:'站内快捷搜索',sub:'搜索标题和正文',keys:'search 搜索',run:()=>open('')},
 {icon:'◫',title:document.body.classList.contains('feng-focus-mode')?'退出专注阅读':'进入专注阅读',sub:'隐藏侧栏和干扰元素',keys:'focus 专注',run:focus},
 {icon:'◐',title:'切换主题（'+({auto:'自动',light:'浅色',dark:'深色'}[state.mode])+ '）',sub:'自动 → 浅色 → 深色',keys:'theme 主题 深色 浅色',run:cycleTheme},
 {icon:'◷',title:'打开 408 番茄钟',sub:'25 分钟专注 / 5 分钟休息',keys:'timer pomodoro 番茄钟',run:openPomo},
