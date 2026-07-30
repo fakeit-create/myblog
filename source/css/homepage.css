@@ -162,6 +162,17 @@ body:has(#feng-home) {
 .feng-pills { display:flex; flex-wrap:wrap; gap:.4rem; }
 .feng-pills span { padding:.28rem .5rem; border:1px solid var(--home-line); border-radius:999px; color:#aab5c7; background:rgba(255,255,255,.025); font-size:.66rem; }
 
+
+/* Phase 2/3 content portals */
+.feng-portal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}
+.feng-portal{position:relative;min-height:190px;display:flex;align-items:flex-start;gap:1rem;padding:1.35rem;color:inherit!important;border:1px solid var(--home-line);border-radius:20px;background:linear-gradient(145deg,rgba(19,25,38,.84),rgba(12,17,26,.78));overflow:hidden;transition:border-color .22s ease,background .22s ease,box-shadow .22s ease}
+.feng-portal:hover{border-color:rgba(139,177,255,.35);background:var(--home-card-hover);box-shadow:0 18px 44px rgba(0,0,0,.16)}
+.feng-portal.wide{grid-column:1/-1;min-height:220px;align-items:flex-end;background:radial-gradient(36rem 20rem at 90% 0,rgba(93,109,230,.16),transparent 70%),var(--home-card)}
+.feng-portal>i{flex:0 0 auto;color:rgba(145,170,220,.35);font:800 .72rem/1 ui-monospace,monospace;font-style:normal;letter-spacing:.1em}
+.feng-portal>div{min-width:0;flex:1}.feng-portal small{color:var(--home-blue);font:700 .6rem/1 ui-monospace,monospace;letter-spacing:.14em}.feng-portal h3{margin:.55rem 0 .55rem;color:#f3f6fc!important;font-size:1.12rem}.feng-portal p{margin:0;color:#8996aa;font-size:.79rem;line-height:1.75}.feng-portal>b{align-self:flex-end;color:#7788a2;font-size:.7rem;white-space:nowrap}.feng-portal.categories{grid-column:span 1;min-height:270px}
+.feng-category-links,.feng-tag-links{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.75rem}.feng-category-links a,.feng-tag-links a{display:inline-flex;align-items:center;gap:.5rem;padding:.38rem .55rem;border:1px solid var(--home-line);border-radius:9px;color:#aeb9ca!important;background:rgba(255,255,255,.025);font-size:.68rem}.feng-category-links a span{color:#66758c}.feng-tag-links a{border-radius:999px;color:#8795aa!important}.feng-category-links a:hover,.feng-tag-links a:hover{color:#dce7fa!important;border-color:rgba(139,177,255,.34)}.feng-empty{color:#66758c;font-size:.72rem}
+.feng-advanced{padding-top:clamp(3rem,7vw,5rem)}.feng-advanced-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}.feng-advanced-card{min-height:112px;display:flex;align-items:center;gap:1rem;padding:1.1rem;border:1px solid var(--home-line)!important;border-radius:17px!important;color:inherit!important;background:rgba(15,21,32,.74)!important;text-align:left;cursor:pointer;box-shadow:none!important;transition:border-color .2s ease,background .2s ease!important}.feng-advanced-card:first-child{grid-column:1/-1}.feng-advanced-card:hover{border-color:rgba(139,177,255,.35)!important;background:rgba(24,31,45,.9)!important}.feng-advanced-card>span{flex:0 0 42px;height:42px;display:grid;place-items:center;border-radius:12px;color:#a7c0fb;background:rgba(107,146,230,.12);font:700 1.15rem/1 ui-monospace,monospace}.feng-advanced-card>div{min-width:0;flex:1}.feng-advanced-card h3{margin:0 0 .35rem;color:#eef3fb!important;font-size:.95rem}.feng-advanced-card p{margin:0;color:#7f8da3;font-size:.72rem}.feng-advanced-card>b{color:#66768e;font:600 .62rem/1 ui-monospace,monospace;white-space:nowrap}
+
 .feng-stats { display:flex; align-items:center; justify-content:space-around; margin:1.5rem 0 5rem; padding:1.1rem; border-top:1px solid var(--home-line); border-bottom:1px solid var(--home-line); }
 .feng-stats div { display:flex; align-items:baseline; gap:.45rem; }
 .feng-stats strong { color:#e8eef8; font-size:1.05rem; }
@@ -217,7 +228,9 @@ body:has(#feng-home) .post-list .post-card:hover { border-color:rgba(139,177,255
   --feng-scroll-scale: 1;
   --feng-scroll-opacity: 1;
   --feng-scroll-y: 0px;
+  --feng-scroll-blur: 0px;
   opacity: var(--feng-scroll-opacity);
+  filter: blur(var(--feng-scroll-blur));
   transform: translate3d(0, var(--feng-scroll-y), 0) scale(var(--feng-scroll-scale));
   transform-origin: 50% 50%;
   will-change: transform, opacity;
@@ -236,7 +249,8 @@ body:has(#feng-home) .post-list .post-card:hover { border-color:rgba(139,177,255
   .feng-hero h1 { font-size:clamp(2.55rem,14vw,4rem); }
   .feng-description br { display:none; }
   .feng-profile-card { max-width:460px; }
-  .feng-bento { grid-template-columns:1fr; }
+  .feng-bento,.feng-portal-grid,.feng-advanced-grid { grid-template-columns:1fr; }
+  .feng-portal.wide,.feng-advanced-card:first-child { grid-column:auto; }
   .feng-featured { grid-row:auto; min-height:250px; }
   .feng-latest { grid-column:auto; }
   .feng-stats { margin-bottom:3.5rem; padding:.9rem .25rem; }

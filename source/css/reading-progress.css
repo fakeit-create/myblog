@@ -1,0 +1,1 @@
+#feng-reading-progress{position:fixed;z-index:2147482990;left:0;top:0;width:var(--reading,0%);height:3px;pointer-events:none;background:linear-gradient(90deg,#67d9a4,#7ca7ff,#ad8cff);box-shadow:0 0 10px rgba(124,167,255,.55);transition:width .08s linear}@media(prefers-reduced-motion:reduce){#feng-reading-progress{transition:none}}
